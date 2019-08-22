@@ -1,4 +1,4 @@
-defmodule NosLib.CreateCharacterCommand do
+defmodule NosLib.Lobby.CreateCharacter do
   use Bitwise, only_operators: true
   import NosLib.CharacterUtil
 

@@ -1,4 +1,4 @@
-defmodule NosLib.SignInCommand do
+defmodule NosLib.Auth.SignIn do
   use Bitwise, only_operators: true
 
   @type t :: %__MODULE__{

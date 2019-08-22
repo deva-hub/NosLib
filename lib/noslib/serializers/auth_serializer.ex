@@ -1,4 +1,4 @@
-defmodule NosLib.AuthenticationSerializer do
+defmodule NosLib.AuthSerializer do
   @moduledoc """
   Authentification response serializer.
   """

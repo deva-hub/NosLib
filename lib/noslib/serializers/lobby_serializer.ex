@@ -1,4 +1,4 @@
-defmodule NosLib.CharacterSelectSerializer do
+defmodule NosLib.LobbySerializer do
   @moduledoc """
   Responses from the world server to select
   a character

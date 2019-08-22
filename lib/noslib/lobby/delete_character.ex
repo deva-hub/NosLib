@@ -1,16 +1,19 @@
-defmodule NosLib.SelectCharacterCommand do
+defmodule NosLib.Lobby.DeleteCharacter do
   use Bitwise, only_operators: true
 
   @type t :: %__MODULE__{
-          slot: integer
+          slot: integer,
+          name: String.t()
         }
 
-  defstruct slot: -1
+  defstruct slot: -1,
+            name: ""
 
   @spec decode!(binary) :: t
   def decode!(payload) do
     %__MODULE__{
-      slot: Enum.at(payload, 0) |> String.to_integer()
+      slot: Enum.at(payload, 0),
+      name: Enum.at(payload, 1)
     }
   rescue
     _e in ArgumentError ->

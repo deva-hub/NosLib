@@ -1,7 +1,7 @@
-defmodule NosLib.WorldCrypto do
+defmodule NosLib.SessionCrypto do
   @moduledoc """
   This module provides a set of cryptographic functions
-  used for the Game protocol.
+  used for the World protocol.
   """
 
   use Bitwise, only_operators: true

@@ -1,4 +1,4 @@
-defmodule NosLib.HandoffCrypto do
+defmodule NosLib.HeaderCrypto do
   use Bitwise, only_operators: true
 
   @doc """
