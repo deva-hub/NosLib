@@ -1,88 +1,56 @@
 defmodule NosLib.CharacterSerializer do
-  @moduledoc """
-  Response from the character actions on the
-  world
-  """
-  import NosLib.SerializerUtil
-  import NosLib.CharacterUtil
+  @type class ::
+          :adventurer
+          | :archer
+          | :martial_artist
+          | :sorcerer
+          | :swordsman
 
-  @type position :: %{
-          x: integer,
-          y: integer
+  @type hair_style :: :a | :b
+
+  @type hair_color ::
+          :affair
+          | :cerise
+          | :dixie
+          | :killarney
+          | :mauve_taupe
+          | :nutmeg
+          | :raven
+          | :red
+          | :saddle
+          | :san_marino
+
+  @type hair :: %{
+          style: hair_style,
+          color: hair_color
         }
 
-  @type spawn_character :: %{
-          id: String.t(),
-          music_id: integer,
-          map_name: String.t(),
-          position: position
-        }
+  @type gender :: :female | :male
 
-  @type family :: %{
-          id: String.t(),
-          name: String.t(),
-          level: pos_integer
-        }
+  @spec serialize_class(class) :: non_neg_integer
+  def serialize_class("adventurer"), do: 0
+  def serialize_class("sorcerer"), do: 1
+  def serialize_class("archer"), do: 2
+  def serialize_class("swordsman"), do: 3
+  def serialize_class("martial_artist"), do: 4
 
-  @type character_info :: %{
-          id: String.t(),
-          name: String.t(),
-          group_id: String.t(),
-          family: family,
-          authority: pos_integer,
-          gender: CharacterUtil.gender(),
-          hair: CharacterUtil.hair(),
-          class: CharacterUtil.class(),
-          dignity: pos_integer,
-          compliment: pos_integer,
-          morph: pos_integer,
-          invisible?: boolean,
-          sp_upgrade?: boolean,
-          arena_winner?: boolean
-        }
+  @spec serialize_class(hair_style) :: non_neg_integer
+  def serialize_hair_style("a"), do: 0
+  def serialize_hair_style("b"), do: 1
 
-  @spec render(:spawn_character, spawn_character) :: [String.t()]
-  def render(:spawn_character, param) do
-    [
-      serialize_params([
-        "at",
-        param.id,
-        normalize_name(param.map_name),
-        param.position_x,
-        param.position_y,
-        2,
-        0,
-        param.music_id,
-        1,
-        -1
-      ])
-    ]
-  end
+  @spec serialize_hair_color(hair_color) :: non_neg_integer
+  def serialize_hair_color("mauve_taupe"), do: 0
+  def serialize_hair_color("cerise"), do: 1
+  def serialize_hair_color("san_marino"), do: 2
+  def serialize_hair_color("affair"), do: 3
+  def serialize_hair_color("dixie"), do: 4
+  def serialize_hair_color("raven"), do: 5
+  def serialize_hair_color("killarney"), do: 6
+  def serialize_hair_color("nutmeg"), do: 7
+  def serialize_hair_color("saddle"), do: 8
+  def serialize_hair_color("red"), do: 9
 
-  @spec render(:character_info, character_info) :: [String.t()]
-  def render(:character_info, param) do
-    [
-      serialize_params([
-        "c_info",
-        normalize_name(param.name),
-        "-",
-        param.group_id,
-        param.family.id,
-        normalize_name(param.family.name),
-        param.id,
-        param.authority,
-        serialize_gender(param.gender),
-        serialize_hair_style(param.hair.style),
-        serialize_hair_color(param.hair.color),
-        serialize_class(param.class),
-        param.dignity,
-        param.compliment,
-        param.morph,
-        serialize_boolean(param.invisible?),
-        param.family.level,
-        serialize_boolean(param.sp_upgrade?),
-        serialize_boolean(param.arena_winner?)
-      ])
-    ]
-  end
+  @spec serialize_gender(gender) :: non_neg_integer
+  def serialize_gender("male"), do: 0
+  def serialize_gender("female"), do: 1
 end

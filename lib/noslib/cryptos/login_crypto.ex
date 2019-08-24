@@ -23,10 +23,6 @@ defmodule NosLib.LoginCrypto do
     for(<<c <- binary>>, into: "", do: decrypt_char(c))
   end
 
-  #
-  # Private functions
-  #
-
   @spec decrypt_char(byte) :: binary
   defp decrypt_char(byte) do
     case byte do

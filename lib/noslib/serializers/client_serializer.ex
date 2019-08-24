@@ -2,21 +2,11 @@ defmodule NosLib.ClientSerializer do
   @moduledoc """
   Response relateh to client
   """
-  import NosLib.SerializerUtil
-
-  @type reason ::
-          :outdated_client
-          | :unexpected_error
-          | :maintenance
-          | :session_already_used
-          | :unvalid_credentials
-          | :cant_authenticate
-          | :citizen_blacklisted
-          | :country_blacklisted
-          | :bad_case
+  import NosLib.Packet
+  alias NosLib.ErrorSerializer
 
   @type error :: %{
-          reason: reason
+          reason: ErrorSerializer.reason()
         }
 
   @type info :: %{
@@ -25,21 +15,27 @@ defmodule NosLib.ClientSerializer do
 
   @spec render(:error, error) :: [String.t()]
   def render(:error, param) do
-    [serialize_params(["failc", serialize_error(param.reason)])]
+    [serialize_error(param)]
   end
 
   @spec render(:info, info) :: [String.t()]
   def render(:info, param) do
-    [serialize_params(["info", param.message])]
+    [serialize_info(param)]
   end
 
-  defp serialize_error(:outdated_client), do: 1
-  defp serialize_error(:unexpected_error), do: 2
-  defp serialize_error(:maintenance), do: 3
-  defp serialize_error(:session_already_used), do: 4
-  defp serialize_error(:unvalid_credentials), do: 5
-  defp serialize_error(:cant_authenticate), do: 6
-  defp serialize_error(:citizen_blacklisted), do: 7
-  defp serialize_error(:country_blacklisted), do: 8
-  defp serialize_error(:bad_case), do: 9
+  @spec serialize_info(error) :: String.t()
+  def serialize_error(param) do
+    assemble([
+      "failc",
+      ErrorSerializer.serialize_reason(param.reason)
+    ])
+  end
+
+  @spec serialize_info(info) :: String.t()
+  def serialize_info(param) do
+    assemble([
+      "info",
+      param.message
+    ])
+  end
 end

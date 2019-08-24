@@ -3,8 +3,8 @@ defmodule NosLib.LobbySerializer do
   Responses from the world server to select
   a character
   """
-  import NosLib.SerializerUtil
-  import NosLib.CharacterUtil
+  import NosLib.Packet
+  alias NosLib.CharacterSerializer
 
   @type equipment :: %{
           hat_id: integer | nil,
@@ -27,7 +27,7 @@ defmodule NosLib.LobbySerializer do
           slot: integer,
           name: String.t(),
           gender: atom,
-          hair: CharacterUtil.hair(),
+          hair: CharacterSerializer.hair(),
           class: atom,
           level: integer,
           hero_level: integer,
@@ -40,13 +40,75 @@ defmodule NosLib.LobbySerializer do
           characters: [character]
         }
 
+  @type family :: %{
+          id: String.t(),
+          name: String.t(),
+          level: pos_integer
+        }
+
+  @type load_character :: %{
+          id: String.t(),
+          name: String.t(),
+          group_id: String.t(),
+          family: family,
+          authority: pos_integer,
+          gender: CharacterSerializer.gender(),
+          hair: CharacterSerializer.hair(),
+          class: CharacterSerializer.class(),
+          dignity: pos_integer,
+          compliment: pos_integer,
+          morph: pos_integer,
+          invisible?: boolean,
+          sp_upgrade?: boolean,
+          arena_winner?: boolean
+        }
+
   @spec render(:list_characters, list_characters) :: [String.t()]
   def render(:list_characters, param) do
     characters = serialize_characters(param.characters)
 
-    ["clist_start #{length(characters)}"]
-    |> Enum.concat(characters)
-    |> Enum.concat(["clist_end"])
+    [
+      "clist_start #{length(characters)}",
+      characters,
+      "clist_end"
+    ]
+  end
+
+  @spec render(:load_character, load_character) :: [String.t()]
+  def render(:load_character, param) do
+    [serialize_load_character(param)]
+  end
+
+  @spec serialize_load_character(load_character) :: String.t()
+  defp serialize_load_character(param) do
+    assemble([
+      "c_info",
+      param.name,
+      "-",
+      param.group_id,
+      serialize_family(param.family),
+      param.id,
+      param.authority,
+      CharacterSerializer.serialize_gender(param.gender),
+      CharacterSerializer.serialize_hair_style(param.hair.style),
+      CharacterSerializer.serialize_hair_color(param.hair.color),
+      CharacterSerializer.serialize_class(param.class),
+      param.dignity,
+      param.compliment,
+      param.morph,
+      param.invisible?,
+      Map.get(param.family, :level, 0),
+      param.sp_upgrade?,
+      param.arena_winner?
+    ])
+  end
+
+  @spec serialize_family(family) :: String.t()
+  def serialize_family(family) do
+    assemble([
+      Map.get(family, :id, -1),
+      Map.get(family, :name, "-")
+    ])
   end
 
   @spec serialize_characters([character]) :: String.t()
@@ -56,16 +118,16 @@ defmodule NosLib.LobbySerializer do
 
   @spec serialize_character(character) :: String.t()
   defp serialize_character(character) do
-    serialize_params([
+    assemble([
       "clist",
       character.slot,
-      normalize_name(character.name),
+      character.name,
       0,
-      serialize_gender(character.gender),
-      serialize_hair_style(character.hair.style),
-      serialize_hair_color(character.hair.color),
+      CharacterSerializer.serialize_gender(character.gender),
+      CharacterSerializer.serialize_hair_style(character.hair.style),
+      CharacterSerializer.serialize_hair_color(character.hair.color),
       0,
-      serialize_class(character.class),
+      CharacterSerializer.serialize_class(character.class),
       character.level,
       character.hero_level,
       serialize_equipment(character.equipment),
@@ -79,31 +141,27 @@ defmodule NosLib.LobbySerializer do
 
   @spec serialize_equipment([equipment]) :: String.t()
   defp serialize_equipment(equipment) do
-    serialize_structure([
-      Map.get(equipment, :hat, "-1"),
-      Map.get(equipment, :armor, "-1"),
-      Map.get(equipment, :weapon_skin, "-1"),
-      Map.get(equipment, :main_weapon, "-1"),
-      Map.get(equipment, :secondary_weapon, "-1"),
-      Map.get(equipment, :mask, "-1"),
-      Map.get(equipment, :fairy, "-1"),
-      Map.get(equipment, :costume_suit, "-1"),
-      Map.get(equipment, :costume_hat, "-1")
+    flatten([
+      Map.get(equipment, :hat),
+      Map.get(equipment, :armor),
+      Map.get(equipment, :weapon_skin),
+      Map.get(equipment, :main_weapon),
+      Map.get(equipment, :secondary_weapon),
+      Map.get(equipment, :mask),
+      Map.get(equipment, :fairy),
+      Map.get(equipment, :costume_suit),
+      Map.get(equipment, :costume_hat)
     ])
   end
 
   @spec serialize_pets([pet]) :: String.t()
   defp serialize_pets(pets) do
-    pets = Enum.map(pets, &serialize_pet/1)
-
-    ["-1" | pets]
-    |> Enum.reverse()
-    |> serialize_structure()
+    assemble(pets, &serialize_pet/1)
   end
 
   @spec serialize_pet(pet) :: String.t()
   defp serialize_pet(pet) do
-    serialize_structure([
+    flatten([
       pet.skin_id,
       pet.id
     ])
