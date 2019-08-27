@@ -30,9 +30,11 @@ defmodule NosLib.WorldCrypto do
   Decrypt a binary packet to a list of world packet.
   """
   @spec decrypt(binary, String.t()) :: [binary]
-  def decrypt(packet, opts \\ []) do
+  def decrypt(binary, opts \\ []) do
     case Keyword.get(opts, :session_id) do
       nil ->
+        <<_::size(8), payload::binary>> = binary
+
         payload =
           payload
           |> parse_header()
@@ -47,7 +49,7 @@ defmodule NosLib.WorldCrypto do
         switch = session_id >>> 6 &&& 0x03
 
         binarys =
-          for <<c <- packet>>, into: <<>> do
+          for <<c <- binary>>, into: <<>> do
             char =
               case switch do
                 0 -> c - offset
