@@ -1,17 +1,13 @@
-defmodule NosLib.WorldCrypto do
+defmodule NosLib.WorldEncoder do
   @moduledoc """
-  This module provides a set of cryptographic functions
-  used for the World protocol.
+  This module provides a set of functions used for decoding and decoding World
+  packets.
   """
-
   use Bitwise, only_operators: true
 
   @char_table [" ", "-", ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "n"]
 
-  @doc """
-  Encrypt data to binary.
-  """
-  @spec encrypt(String.t()) :: binary
+  @spec encrypt(binary) :: binary
   def encrypt(binary) do
     bytes =
       binary
@@ -19,17 +15,22 @@ defmodule NosLib.WorldCrypto do
       |> Enum.with_index()
 
     length = length(bytes)
-    data = for {b, i} <- bytes, into: <<>>, do: encrypt_char(b, i, length)
+
+    data =
+      for {b, i} <- bytes,
+          into: <<>>,
+          do: encrypt_char(b, i, length)
+
     <<data::binary, 0xFF::size(8)>>
   rescue
     _e in ArgumentError ->
       reraise NosLib.CryptoError, __STACKTRACE__
   end
 
-  @doc """
-  Decrypt a binary packet to a list of world packet.
-  """
-  @spec decrypt(binary, String.t()) :: [binary]
+  @type option :: {:session_id, integer}
+  @type options :: [option]
+
+  @spec decrypt(binary, options) :: [binary]
   def decrypt(binary, opts \\ []) do
     case Keyword.get(opts, :session_id) do
       nil ->
@@ -41,7 +42,7 @@ defmodule NosLib.WorldCrypto do
           |> String.split()
           |> Enum.at(1)
 
-        if payload != nil, do: payload, else: ""
+        if payload != nil, do: [payload], else: []
 
       session_id ->
         session_key = session_id &&& 0xFF
@@ -64,15 +65,12 @@ defmodule NosLib.WorldCrypto do
         binarys
         |> :binary.split(<<0xFF>>, [:global, :trim_all])
         |> Enum.map(&decrypt_session_chunk/1)
-        |> Stream.map(&String.split(&1, " ", parts: 2))
-        |> Enum.map(fn [l, r] -> {String.to_integer(l), r} end)
     end
   rescue
     _e in ArgumentError ->
       reraise NosLib.CryptoError, __STACKTRACE__
   end
 
-  @spec parse_header(binary, String.t()) :: String.t()
   defp parse_header(binary, result \\ "")
 
   defp parse_header(<<>>, result), do: result
@@ -105,19 +103,27 @@ defmodule NosLib.WorldCrypto do
     parse_header(rest, result <> first <> second)
   end
 
-  @spec encrypt_char(char, integer, integer) :: binary
-  defp encrypt_char(char, index, _) when rem(index, 0x7E) != 0, do: <<(~~~char)>>
+  defp encrypt_char(char, index, _) when rem(index, 0x7E) != 0,
+    do: <<(~~~char)>>
 
   defp encrypt_char(char, index, length) do
-    remaining = if length - index > 0x7E, do: 0x7E, else: length - index
+    remaining =
+      if length - index > 0x7E do
+        0x7E
+      else
+        length - index
+      end
+
     <<remaining::size(8), ~~~char::size(8)>>
   end
 
-  @spec decrypt_session_chunk(binary, list) :: String.t()
   defp decrypt_session_chunk(binary, result \\ [])
-  defp decrypt_session_chunk("", result), do: result |> Enum.reverse() |> Enum.join()
 
-  defp decrypt_session_chunk(<<byte::size(8), rest::binary>>, result) when byte <= 0x7A do
+  defp decrypt_session_chunk("", result),
+    do: result |> Enum.reverse() |> Enum.join()
+
+  defp decrypt_session_chunk(<<byte::size(8), rest::binary>>, result)
+       when byte <= 0x7A do
     len = Enum.min([byte, byte_size(rest)])
     {first, second} = String.split_at(rest, len)
     res = for <<c <- first>>, into: "", do: <<c ^^^ 0xFF>>
@@ -130,10 +136,13 @@ defmodule NosLib.WorldCrypto do
     decrypt_session_chunk(second, [first | result])
   end
 
-  @spec parse_session(binary, integer, binary) :: {binary, binary}
   defp parse_session(bin, len, i \\ 0, result \\ "")
-  defp parse_session("", _, _, result), do: {result, ""}
-  defp parse_session(bin, len, i, result) when i >= len, do: {result, bin}
+
+  defp parse_session("", _, _, result),
+    do: {result, ""}
+
+  defp parse_session(bin, len, i, result) when i >= len,
+    do: {result, bin}
 
   defp parse_session(bin, len, i, result) do
     <<h::size(4), l::size(4), rest::binary>> = bin

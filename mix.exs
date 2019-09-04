@@ -1,27 +1,21 @@
 defmodule NosLib.MixProject do
+  @moduledoc false
   use Mix.Project
+
+  @version "0.2.0"
+  @repo_url "https://github.com/deva-hub/NosLib"
 
   def project do
     [
       app: :noslib,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.9",
-      build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-
-      # Hex
-      description: "Nostale network library.",
+      description: "NosTale protocol parsing library.",
       package: package(),
-
-      # Docs
-      name: "NosLib"
-    ]
-  end
-
-  def application do
-    [
-      extra_applications: [:logger]
+      name: "NosLib",
+      docs: docs()
     ]
   end
 
@@ -33,12 +27,19 @@ defmodule NosLib.MixProject do
     ]
   end
 
+  defp docs do
+    [
+      source_ref: "v#{@version}",
+      source_url: @repo_url
+    ]
+  end
+
   defp package do
     [
-      files: ["lib", "priv", "mix.exs", "README.md"],
+      files: ["lib", "mix.exs", "README.md"],
       maintainers: ["Shikanime Deva"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/deva-hub/NosLib"}
+      links: %{"GitHub" => @repo_url}
     ]
   end
 end

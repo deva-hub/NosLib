@@ -1,10 +1,8 @@
 defmodule NosLib.LocationSerializer do
   @moduledoc """
-  Response from the character actions on the
-  world
+  Character actions and interaction command with the world.
   """
   import NosLib.Packet
-  import NosLib.CharacterSerializer
 
   @type position :: %{
           x: integer,
@@ -12,18 +10,19 @@ defmodule NosLib.LocationSerializer do
         }
 
   @type spawn_character :: %{
-          id: String.t(),
+          id: binary,
           music_id: integer,
-          map_name: String.t(),
+          map_name: binary,
           position: position
         }
 
-  @spec render(:spawn_character, spawn_character) :: [String.t()]
-  def render(:spawn_character, param) do
-    [serialize_spawn_character(param)]
-  end
+  def render(template, param)
 
-  @spec serialize_spawn_character(spawn_character) :: String.t()
+  @spec render(:spawn_character, spawn_character) :: [binary]
+  def render(:spawn_character, param),
+    do: [serialize_spawn_character(param)]
+
+  @spec serialize_spawn_character(spawn_character) :: binary
   defp serialize_spawn_character(param) do
     assemble([
       "at",

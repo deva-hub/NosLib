@@ -1,37 +1,31 @@
 defmodule NosLib.ClientSerializer do
   @moduledoc """
-  Response relateh to client
+  Client specific response serializer.
   """
   import NosLib.Packet
-  alias NosLib.ErrorSerializer
+  alias NosLib.ErrorHelpers
 
-  @type error :: %{
-          reason: ErrorSerializer.reason()
-        }
+  @type error :: %{reason: ErrorHelpers.reason()}
 
-  @type info :: %{
-          message: String.t()
-        }
+  @type info :: %{message: binary}
 
-  @spec render(:error, error) :: [String.t()]
-  def render(:error, param) do
-    [serialize_error(param)]
-  end
+  def render(template, param)
 
-  @spec render(:info, info) :: [String.t()]
-  def render(:info, param) do
-    [serialize_info(param)]
-  end
+  @spec render(:error, error) :: [binary]
+  def render(:error, param),
+    do: [serialize_error(param)]
 
-  @spec serialize_info(error) :: String.t()
+  @spec render(:info, info) :: [binary]
+  def render(:info, param),
+    do: [serialize_info(param)]
+
   def serialize_error(param) do
     assemble([
       "failc",
-      ErrorSerializer.serialize_reason(param.reason)
+      ErrorHelpers.serialize_reason(param.reason)
     ])
   end
 
-  @spec serialize_info(info) :: String.t()
   def serialize_info(param) do
     assemble([
       "info",

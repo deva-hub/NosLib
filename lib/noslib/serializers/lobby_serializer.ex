@@ -1,10 +1,9 @@
 defmodule NosLib.LobbySerializer do
   @moduledoc """
-  Responses from the world server to select
-  a character
+  Responses from the world server to select a character.
   """
   import NosLib.Packet
-  alias NosLib.CharacterSerializer
+  alias NosLib.CharacterHelpers
 
   @type equipment :: %{
           hat_id: integer | nil,
@@ -25,9 +24,9 @@ defmodule NosLib.LobbySerializer do
 
   @type character :: %{
           slot: integer,
-          name: String.t(),
+          name: binary,
           gender: atom,
-          hair: CharacterSerializer.hair(),
+          hair: CharacterHelpers.hair(),
           class: atom,
           level: integer,
           hero_level: integer,
@@ -41,20 +40,20 @@ defmodule NosLib.LobbySerializer do
         }
 
   @type family :: %{
-          id: String.t(),
-          name: String.t(),
+          id: binary,
+          name: binary,
           level: pos_integer
         }
 
   @type load_character :: %{
-          id: String.t(),
-          name: String.t(),
-          group_id: String.t(),
+          id: binary,
+          name: binary,
+          group_id: binary,
           family: family,
           authority: pos_integer,
-          gender: CharacterSerializer.gender(),
-          hair: CharacterSerializer.hair(),
-          class: CharacterSerializer.class(),
+          gender: CharacterHelpers.gender(),
+          hair: CharacterHelpers.hair(),
+          class: CharacterHelpers.class(),
           dignity: pos_integer,
           compliment: pos_integer,
           morph: pos_integer,
@@ -63,7 +62,9 @@ defmodule NosLib.LobbySerializer do
           arena_winner?: boolean
         }
 
-  @spec render(:list_characters, list_characters) :: [String.t()]
+  def render(template, param)
+
+  @spec render(:list_characters, list_characters) :: [binary]
   def render(:list_characters, param) do
     characters = serialize_characters(param.characters)
 
@@ -74,12 +75,11 @@ defmodule NosLib.LobbySerializer do
     ]
   end
 
-  @spec render(:load_character, load_character) :: [String.t()]
-  def render(:load_character, param) do
-    [serialize_load_character(param)]
-  end
+  @spec render(:load_character, load_character) :: [binary]
+  def render(:load_character, param),
+    do: [serialize_load_character(param)]
 
-  @spec serialize_load_character(load_character) :: String.t()
+  @spec serialize_load_character(load_character) :: binary
   defp serialize_load_character(param) do
     assemble([
       "c_info",
@@ -89,10 +89,10 @@ defmodule NosLib.LobbySerializer do
       serialize_family(param.family),
       param.id,
       param.authority,
-      CharacterSerializer.serialize_gender(param.gender),
-      CharacterSerializer.serialize_hair_style(param.hair.style),
-      CharacterSerializer.serialize_hair_color(param.hair.color),
-      CharacterSerializer.serialize_class(param.class),
+      CharacterHelpers.serialize_gender(param.gender),
+      CharacterHelpers.serialize_hair_style(param.hair.style),
+      CharacterHelpers.serialize_hair_color(param.hair.color),
+      CharacterHelpers.serialize_class(param.class),
       param.dignity,
       param.compliment,
       param.morph,
@@ -103,7 +103,7 @@ defmodule NosLib.LobbySerializer do
     ])
   end
 
-  @spec serialize_family(family) :: String.t()
+  @spec serialize_family(family) :: binary
   def serialize_family(family) do
     assemble([
       Map.get(family, :id, -1),
@@ -111,23 +111,22 @@ defmodule NosLib.LobbySerializer do
     ])
   end
 
-  @spec serialize_characters([character]) :: String.t()
-  defp serialize_characters(characters) do
-    Enum.map(characters, &serialize_character(&1))
-  end
+  @spec serialize_characters([character]) :: binary
+  defp serialize_characters(characters),
+    do: Enum.map(characters, &serialize_character(&1))
 
-  @spec serialize_character(character) :: String.t()
+  @spec serialize_character(character) :: binary
   defp serialize_character(character) do
     assemble([
       "clist",
       character.slot,
       character.name,
       0,
-      CharacterSerializer.serialize_gender(character.gender),
-      CharacterSerializer.serialize_hair_style(character.hair.style),
-      CharacterSerializer.serialize_hair_color(character.hair.color),
+      CharacterHelpers.serialize_gender(character.gender),
+      CharacterHelpers.serialize_hair_style(character.hair.style),
+      CharacterHelpers.serialize_hair_color(character.hair.color),
       0,
-      CharacterSerializer.serialize_class(character.class),
+      CharacterHelpers.serialize_class(character.class),
       character.level,
       character.hero_level,
       serialize_equipment(character.equipment),
@@ -139,7 +138,7 @@ defmodule NosLib.LobbySerializer do
     ])
   end
 
-  @spec serialize_equipment([equipment]) :: String.t()
+  @spec serialize_equipment([equipment]) :: binary
   defp serialize_equipment(equipment) do
     flatten([
       Map.get(equipment, :hat),
@@ -154,12 +153,11 @@ defmodule NosLib.LobbySerializer do
     ])
   end
 
-  @spec serialize_pets([pet]) :: String.t()
-  defp serialize_pets(pets) do
-    assemble(pets, &serialize_pet/1)
-  end
+  @spec serialize_pets([pet]) :: binary
+  defp serialize_pets(pets),
+    do: assemble(pets, &serialize_pet/1)
 
-  @spec serialize_pet(pet) :: String.t()
+  @spec serialize_pet(pet) :: binary
   defp serialize_pet(pet) do
     flatten([
       pet.skin_id,

@@ -1,4 +1,8 @@
-defmodule NosLib.CharacterSerializer do
+defmodule NosLib.CharacterHelpers do
+  @moduledoc """
+  Lobby related character helpers.
+  """
+
   @type class ::
           :adventurer
           | :archer

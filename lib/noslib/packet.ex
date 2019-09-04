@@ -1,15 +1,17 @@
 defmodule NosLib.Packet do
-  @spec assemble([String.t()]) :: String.t()
+  @moduledoc false
+
+  @spec assemble([binary]) :: binary
   def assemble(list) do
     join(list)
   end
 
-  @spec assemble([String.t()], function) :: String.t()
+  @spec assemble([binary], function) :: binary
   def assemble(list, fun) do
     assemble(list, nil, fun)
   end
 
-  @spec assemble([String.t()], STring.t() | nil, function) :: String.t()
+  @spec assemble([binary], STring.t() | nil, function) :: binary
   def assemble(list, ending, fun) do
     list = Enum.map(list, &fun.(&1))
 
@@ -18,20 +20,20 @@ defmodule NosLib.Packet do
     |> assemble()
   end
 
-  @spec flatten([String.t()]) :: String.t()
+  @spec flatten([binary]) :: binary
   def flatten(list), do: join(list, ".")
 
-  @spec link([String.t()]) :: String.t()
+  @spec link([binary]) :: binary
   def link(list), do: join(list, ":")
 
-  @spec join([String.t()]) :: String.t()
+  @spec join([binary]) :: binary
   def join(list, joiner \\ " ") do
     list
     |> Enum.map(&serialize/1)
     |> Enum.join(joiner)
   end
 
-  @spec serialize(term) :: String.t()
+  @spec serialize(term) :: binary
   def serialize(false), do: "0"
   def serialize(true), do: "1"
   def serialize(""), do: "-"

@@ -1,4 +1,8 @@
-defmodule NosLib.ErrorSerializer do
+defmodule NosLib.ErrorHelpers do
+  @moduledoc """
+  Helpers for error serialization.
+  """
+
   @type reason ::
           :outdated_client
           | :unexpected_error

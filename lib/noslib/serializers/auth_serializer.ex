@@ -7,7 +7,7 @@ defmodule NosLib.AuthSerializer do
   @type channel :: %{
           id: pos_integer,
           slot: pos_integer,
-          ip: String.t(),
+          ip: binary,
           port: pos_integer,
           population: pos_integer,
           capacity: pos_integer
@@ -25,12 +25,12 @@ defmodule NosLib.AuthSerializer do
 
   @worlds_ending "-1:-1:-1:10000.10000.1"
 
-  @spec render(:authenticated, authenticated) :: [String.t()]
-  def render(:authenticated, param) do
-    [serialize_authenticate(param)]
-  end
+  def render(template, param)
 
-  @spec serialize_authenticate(authenticated) :: String.t()
+  @spec render(:authenticated, authenticated) :: [binary]
+  def render(:authenticated, param),
+    do: [serialize_authenticate(param)]
+
   defp serialize_authenticate(param) do
     assemble([
       "NsTeST",
@@ -39,16 +39,14 @@ defmodule NosLib.AuthSerializer do
     ])
   end
 
-  @spec serialize_worlds([world]) :: String.t()
   defp serialize_worlds(worlds) do
     assemble(
       worlds,
       @worlds_ending,
-      &(serialize_world(&1))
+      &serialize_world(&1)
     )
   end
 
-  @spec serialize_world(world) :: String.t()
   defp serialize_world(world) do
     Enum.map(world.channels, fn channel ->
       link([
@@ -64,7 +62,6 @@ defmodule NosLib.AuthSerializer do
     end)
   end
 
-  defp serialize_channel_color(population, capacity) do
-    Integer.to_string(round(population / capacity * 20) + 1)
-  end
+  defp serialize_channel_color(population, capacity),
+    do: Integer.to_string(round(population / capacity * 20) + 1)
 end

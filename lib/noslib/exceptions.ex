@@ -2,16 +2,14 @@ defmodule NosLib.CryptoError do
   defexception []
 
   @impl true
-  def message(_exception) do
-    "could decode packet"
-  end
+  def message(_exception),
+    do: "could decode packet"
 end
 
 defmodule NosLib.ParserError do
   defexception []
 
   @impl true
-  def message(_exception) do
-    "could parse packet"
-  end
+  def message(_exception),
+    do: "could parse packet"
 end
