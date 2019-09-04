@@ -102,11 +102,9 @@ defmodule NosLib.WorldEncoder do
 
   defp encrypt_char(char, index, length) do
     remaining =
-      if length - index > 0x7E do
-        0x7E
-      else
-        length - index
-      end
+      if length - index > 0x7E,
+        do: 0x7E,
+        else: length - index
 
     <<remaining::size(8), ~~~char::size(8)>>
   end
