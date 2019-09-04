@@ -22,14 +22,13 @@ defmodule NosLib.LocationSerializer do
   def render(:spawn_character, param),
     do: [serialize_spawn_character(param)]
 
-  @spec serialize_spawn_character(spawn_character) :: binary
   defp serialize_spawn_character(param) do
     assemble([
       "at",
       param.id,
       param.map_name,
-      param.position_x,
-      param.position_y,
+      param.position.x,
+      param.position.y,
       "2",
       "0",
       param.music_id,

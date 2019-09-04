@@ -25,8 +25,6 @@ defmodule NosLib.AuthSerializer do
 
   @worlds_ending "-1:-1:-1:10000.10000.1"
 
-  def render(template, param)
-
   @spec render(:authenticated, authenticated) :: [binary]
   def render(:authenticated, param),
     do: [serialize_authenticate(param)]
@@ -63,5 +61,5 @@ defmodule NosLib.AuthSerializer do
   end
 
   defp serialize_channel_color(population, capacity),
-    do: Integer.to_string(round(population / capacity * 20) + 1)
+    do: round(population / capacity * 20) + 1
 end

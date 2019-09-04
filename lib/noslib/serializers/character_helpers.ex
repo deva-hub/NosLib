@@ -3,33 +3,14 @@ defmodule NosLib.CharacterHelpers do
   Lobby related character helpers.
   """
 
-  @type class ::
-          :adventurer
-          | :archer
-          | :martial_artist
-          | :sorcerer
-          | :swordsman
-
-  @type hair_style :: :a | :b
-
-  @type hair_color ::
-          :affair
-          | :cerise
-          | :dixie
-          | :killarney
-          | :mauve_taupe
-          | :nutmeg
-          | :raven
-          | :red
-          | :saddle
-          | :san_marino
-
+  @type class :: binary
+  @type gender :: binary
+  @type hair_style :: binary
+  @type hair_color :: binary
   @type hair :: %{
           style: hair_style,
           color: hair_color
         }
-
-  @type gender :: :female | :male
 
   @spec serialize_class(class) :: non_neg_integer
   def serialize_class("adventurer"), do: 0
@@ -38,7 +19,7 @@ defmodule NosLib.CharacterHelpers do
   def serialize_class("swordsman"), do: 3
   def serialize_class("martial_artist"), do: 4
 
-  @spec serialize_class(hair_style) :: non_neg_integer
+  @spec serialize_hair_style(hair_style) :: non_neg_integer
   def serialize_hair_style("a"), do: 0
   def serialize_hair_style("b"), do: 1
 

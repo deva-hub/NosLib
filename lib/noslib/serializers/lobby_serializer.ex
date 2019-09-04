@@ -25,9 +25,9 @@ defmodule NosLib.LobbySerializer do
   @type character :: %{
           slot: integer,
           name: binary,
-          gender: atom,
+          gender: binary,
           hair: CharacterHelpers.hair(),
-          class: atom,
+          class: binary,
           level: integer,
           hero_level: integer,
           job_level: integer,
@@ -62,8 +62,6 @@ defmodule NosLib.LobbySerializer do
           arena_winner?: boolean
         }
 
-  def render(template, param)
-
   @spec render(:list_characters, list_characters) :: [binary]
   def render(:list_characters, param) do
     characters = serialize_characters(param.characters)
@@ -79,7 +77,6 @@ defmodule NosLib.LobbySerializer do
   def render(:load_character, param),
     do: [serialize_load_character(param)]
 
-  @spec serialize_load_character(load_character) :: binary
   defp serialize_load_character(param) do
     assemble([
       "c_info",
@@ -103,7 +100,6 @@ defmodule NosLib.LobbySerializer do
     ])
   end
 
-  @spec serialize_family(family) :: binary
   def serialize_family(family) do
     assemble([
       Map.get(family, :id, -1),
@@ -111,11 +107,9 @@ defmodule NosLib.LobbySerializer do
     ])
   end
 
-  @spec serialize_characters([character]) :: binary
   defp serialize_characters(characters),
     do: Enum.map(characters, &serialize_character(&1))
 
-  @spec serialize_character(character) :: binary
   defp serialize_character(character) do
     assemble([
       "clist",
@@ -138,7 +132,6 @@ defmodule NosLib.LobbySerializer do
     ])
   end
 
-  @spec serialize_equipment([equipment]) :: binary
   defp serialize_equipment(equipment) do
     flatten([
       Map.get(equipment, :hat),
@@ -153,11 +146,9 @@ defmodule NosLib.LobbySerializer do
     ])
   end
 
-  @spec serialize_pets([pet]) :: binary
   defp serialize_pets(pets),
     do: assemble(pets, &serialize_pet/1)
 
-  @spec serialize_pet(pet) :: binary
   defp serialize_pet(pet) do
     flatten([
       pet.skin_id,

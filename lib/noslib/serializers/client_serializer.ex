@@ -6,10 +6,7 @@ defmodule NosLib.ClientSerializer do
   alias NosLib.ErrorHelpers
 
   @type error :: %{reason: ErrorHelpers.reason()}
-
   @type info :: %{message: binary}
-
-  def render(template, param)
 
   @spec render(:error, error) :: [binary]
   def render(:error, param),

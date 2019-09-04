@@ -22,9 +22,6 @@ defmodule NosLib.WorldEncoder do
           do: encrypt_char(b, i, length)
 
     <<data::binary, 0xFF::size(8)>>
-  rescue
-    _e in ArgumentError ->
-      reraise NosLib.CryptoError, __STACKTRACE__
   end
 
   @type option :: {:session_id, integer}
@@ -66,9 +63,6 @@ defmodule NosLib.WorldEncoder do
         |> :binary.split(<<0xFF>>, [:global, :trim_all])
         |> Enum.map(&decrypt_session_chunk/1)
     end
-  rescue
-    _e in ArgumentError ->
-      reraise NosLib.CryptoError, __STACKTRACE__
   end
 
   defp parse_header(binary, result \\ "")
