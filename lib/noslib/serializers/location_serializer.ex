@@ -16,10 +16,10 @@ defmodule NosLib.LocationSerializer do
           position: position
         }
 
-  def render(template, param)
+  def marshal(template, param)
 
-  @spec render(:spawn_character, spawn_character) :: [binary]
-  def render(:spawn_character, param),
+  @spec marshal(:spawn_character, spawn_character) :: [binary]
+  def marshal(:spawn_character, param),
     do: [serialize_spawn_character(param)]
 
   defp serialize_spawn_character(param) do

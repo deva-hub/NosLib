@@ -62,6 +62,8 @@ defmodule NosLib.LobbySerializer do
           arena_winner?: boolean
         }
 
+  @pets_ending "-1"
+
   @spec render(:list_characters, list_characters) :: [binary]
   def render(:list_characters, param) do
     characters = serialize_characters(param.characters)
@@ -94,7 +96,7 @@ defmodule NosLib.LobbySerializer do
       param.compliment,
       param.morph,
       param.invisible?,
-      Map.get(param.family, :level, 0),
+      param.family.level,
       param.sp_upgrade?,
       param.arena_winner?
     ])
@@ -102,8 +104,8 @@ defmodule NosLib.LobbySerializer do
 
   def serialize_family(family) do
     assemble([
-      Map.get(family, :id, -1),
-      Map.get(family, :name, "-")
+      family.id,
+      family.name
     ])
   end
 
@@ -134,20 +136,20 @@ defmodule NosLib.LobbySerializer do
 
   defp serialize_equipment(equipment) do
     flatten([
-      Map.get(equipment, :hat),
-      Map.get(equipment, :armor),
-      Map.get(equipment, :weapon_skin),
-      Map.get(equipment, :main_weapon),
-      Map.get(equipment, :secondary_weapon),
-      Map.get(equipment, :mask),
-      Map.get(equipment, :fairy),
-      Map.get(equipment, :costume_suit),
-      Map.get(equipment, :costume_hat)
+      Map.get(equipment, :hat, "-1"),
+      Map.get(equipment, :armor, "-1"),
+      Map.get(equipment, :weapon_skin, "-1"),
+      Map.get(equipment, :main_weapon, "-1"),
+      Map.get(equipment, :secondary_weapon, "-1"),
+      Map.get(equipment, :mask, "-1"),
+      Map.get(equipment, :fairy, "-1"),
+      Map.get(equipment, :costume_suit, "-1"),
+      Map.get(equipment, :costume_hat, "-1")
     ])
   end
 
   defp serialize_pets(pets),
-    do: assemble(pets, &serialize_pet/1)
+    do: assemble(pets, @pets_ending, &serialize_pet/1)
 
   defp serialize_pet(pet) do
     flatten([

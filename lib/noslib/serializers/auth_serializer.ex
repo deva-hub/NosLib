@@ -25,8 +25,8 @@ defmodule NosLib.AuthSerializer do
 
   @worlds_ending "-1:-1:-1:10000.10000.1"
 
-  @spec render(:authenticated, authenticated) :: [binary]
-  def render(:authenticated, param),
+  @spec marshal(:authenticated, authenticated) :: [binary]
+  def marshal(:authenticated, param),
     do: [serialize_authenticate(param)]
 
   defp serialize_authenticate(param) do

@@ -8,12 +8,12 @@ defmodule NosLib.ClientSerializer do
   @type error :: %{reason: ErrorHelpers.reason()}
   @type info :: %{message: binary}
 
-  @spec render(:error, error) :: [binary]
-  def render(:error, param),
+  @spec marshal(:error, error) :: [binary]
+  def marshal(:error, param),
     do: [serialize_error(param)]
 
-  @spec render(:info, info) :: [binary]
-  def render(:info, param),
+  @spec marshal(:info, info) :: [binary]
+  def marshal(:info, param),
     do: [serialize_info(param)]
 
   def serialize_error(param) do

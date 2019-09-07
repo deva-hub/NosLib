@@ -4,7 +4,7 @@ defmodule NosLib.ErrorHelpers do
   """
 
   @type reason ::
-          :unsupported_client
+          :outdated_client
           | :unexpected_error
           | :maintenance
           | :session_already_used
@@ -15,7 +15,7 @@ defmodule NosLib.ErrorHelpers do
           | :bad_case
 
   @spec serialize_reason(reason) :: non_neg_integer
-  def serialize_reason(:unsupported_client), do: 1
+  def serialize_reason(:outdated_client), do: 1
   def serialize_reason(:unexpected_error), do: 2
   def serialize_reason(:maintenance), do: 3
   def serialize_reason(:session_already_used), do: 4
