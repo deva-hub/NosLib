@@ -1,4 +1,4 @@
-defmodule NosLib.LoginEncoder do
+defmodule NosLib.WorldCrypto do
   @moduledoc """
   This module provides a set of functions used for decoding and encoding Login
   packets.

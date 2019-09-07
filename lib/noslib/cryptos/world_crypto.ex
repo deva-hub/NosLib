@@ -1,4 +1,4 @@
-defmodule NosLib.WorldEncoder do
+defmodule NosLib.WorldCrypto do
   @moduledoc """
   This module provides a set of functions used for decoding and decoding World
   packets.
@@ -61,7 +61,7 @@ defmodule NosLib.WorldEncoder do
 
         binarys
         |> :binary.split(<<0xFF>>, [:global, :trim_all])
-        |> Enum.map(&decrypt_session_chunk/1)
+        |> Enum.map(<<0xFF>>, &decrypt_session_chunk/1)
     end
   end
 
