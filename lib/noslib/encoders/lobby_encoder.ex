@@ -65,8 +65,8 @@ defmodule NosLib.LobbyEncoder do
 
   @spec encode(:list_characters, list_characters) :: [binary]
   def encode(:list_characters, param) do
-    characters = IO.iodata_to_binary(encode_characters(param.characters))
-    header = IO.iodata_to_binary(encode_character_header(characters))
+    characters = :binary.list_to_bin(encode_characters(param.characters))
+    header = :binary.list_to_bin(encode_character_header(characters))
 
     [
       header,

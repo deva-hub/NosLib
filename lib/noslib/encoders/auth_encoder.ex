@@ -26,7 +26,7 @@ defmodule NosLib.AuthEncoder do
 
   @spec encode(:authenticated, authenticated) :: [binary]
   def encode(:authenticated, param),
-    do: [IO.iodata_to_binary(encode_authenticate(param))]
+    do: [:binary.list_to_bin(encode_authenticate(param))]
 
   @spec encode_to_iodata(:authenticated, authenticated) :: [iodata]
   def encode_to_iodata(:authenticated, param),

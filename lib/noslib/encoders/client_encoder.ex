@@ -9,11 +9,11 @@ defmodule NosLib.ClientEncoder do
 
   @spec encode(:error, error) :: [binary]
   def encode(:error, param),
-    do: [IO.iodata_to_binary(decode_error(param))]
+    do: [:binary.list_to_bin(decode_error(param))]
 
   @spec encode(:info, info) :: [binary]
   def encode(:info, param),
-    do: [IO.iodata_to_binary(decode_info(param))]
+    do: [:binary.list_to_bin(decode_info(param))]
 
   @spec encode_to_iodata(:error, error) :: [iodata]
   def encode_to_iodata(:error, param),

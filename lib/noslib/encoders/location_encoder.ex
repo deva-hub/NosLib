@@ -17,7 +17,7 @@ defmodule NosLib.LocationEncoder do
 
   @spec encode(:spawn_character, spawn_character) :: [binary]
   def encode(:spawn_character, param),
-    do: [IO.iodata_to_binary(encode_spawn_character(param))]
+    do: [:binary.list_to_bin(encode_spawn_character(param))]
 
   @spec encode_to_iodata(:spawn_character, spawn_character) :: [iodata]
   def encode_to_iodata(:spawn_character, param),

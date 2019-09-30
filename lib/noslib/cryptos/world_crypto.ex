@@ -1,4 +1,4 @@
-defmodule NosLib.WorldCodec do
+defmodule NosLib.WorldCrypto do
   @moduledoc """
   This module provides a set of functions used for decoding and decoding World
   packets.
@@ -9,7 +9,7 @@ defmodule NosLib.WorldCodec do
 
   @spec encode(iodata) :: binary
   def encode(input) when is_list(input),
-    do: encode(IO.iodata_to_binary(input))
+    do: encode(:binary.list_to_bin(input))
 
   @spec encode(String.t()) :: binary
   def encode(input) do
