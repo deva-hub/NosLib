@@ -18,7 +18,7 @@ defmodule Noslib.AuthHandshake do
         }
 
   @spec new(String.t(), String.t(), String.t(), String.t()) :: t
-  def deserialize([username, password, client_vsn, client_hash]) do
+  def deserialize([username, password, client_vsn, _, client_hash]) do
     %__MODULE__{
       username: username,
       password: decode_password(password),
