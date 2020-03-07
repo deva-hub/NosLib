@@ -1,6 +1,6 @@
-defmodule Noslib.AuthHandshake do
+defmodule Noslib.ClientAuth do
   @moduledoc """
-  A wrapper for Nostale's `AuthHandshake` message.
+  A wrapper for Nostale's `ClientAuth` message.
   """
 
   defstruct [
