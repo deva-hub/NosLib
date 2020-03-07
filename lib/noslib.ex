@@ -9,14 +9,14 @@ defmodule Noslib do
   import Noslib.Helpers
 
   @spec serialize(struct) :: iodata
-  def serialize(packet) do
+  def serialize(packet) when is_binary(packet) do
     packet
     |> Noslib.Encoder.serialize()
     |> encode_packet()
   end
 
-  @spec deserialize(struct) :: iodata
-  def deserialize(packet) do
+  @spec deserialize(binary) :: iodata
+  def deserialize(packet) when is_binary(packet) do
     packet
     |> decode_packet()
     |> Noslib.Encoder.deserialize()
