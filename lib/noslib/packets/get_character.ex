@@ -9,9 +9,9 @@ defmodule Noslib.GetCharacter do
           id: non_neg_integer,
           name: String.t(),
           group_id: non_neg_integer,
-          familly: pos_integer,
+          familly_id: non_neg_integer,
           familly_name: String.t(),
-          familly_level: pos_integer,
+          familly_level: non_neg_integer,
           authority: non_neg_integer,
           gender: Character.gender(),
           hair_color: Character.hair_color(),
@@ -29,7 +29,7 @@ defmodule Noslib.GetCharacter do
     :id,
     :name,
     :group_id,
-    :familly,
+    :familly_id,
     :familly_name,
     :familly_level,
     :authority,
@@ -50,10 +50,10 @@ defmodule Noslib.GetCharacter do
   end
 
   defp user(packet, [id, name, group_id | rest]) do
-    familly(%{packet | id: id, name: name, group_id: group_id}, rest)
+    familly_id(%{packet | id: id, name: name, group_id: group_id}, rest)
   end
 
-  defp familly(packet, [familly_id, familly_name | rest]) do
+  defp familly_id(packet, [familly_id, familly_name | rest]) do
     authority(%{packet | familly_id: familly_id, familly_name: familly_name}, rest)
   end
 
@@ -100,7 +100,7 @@ defimpl Noslib.Encoder, for: Noslib.GetCharacter do
       packet.name,
       "-",
       packet.group_id |> to_string(),
-      packet.familly |> to_string(),
+      packet.familly_id |> to_string(),
       packet.familly_name,
       packet.id |> to_string(),
       packet.authority |> to_string(),
