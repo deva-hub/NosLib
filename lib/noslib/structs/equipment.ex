@@ -1,5 +1,5 @@
-defmodule Noslib.Equipment do
-  import Noslib.Helpers
+defmodule NosLib.Equipment do
+  import NosLib.Helpers
 
   @type t :: %__MODULE__{
           hat: pos_integer | nil,

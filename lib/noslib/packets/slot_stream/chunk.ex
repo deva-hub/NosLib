@@ -1,6 +1,6 @@
-defmodule Noslib.SlotStream.Chunk do
-  import Noslib.Helpers
-  alias Noslib.{Character, Equipment, Pet}
+defmodule NosLib.SlotStream.Chunk do
+  import NosLib.Helpers
+  alias NosLib.{Character, Equipment, Pet}
 
   @type t :: %{
           index: pos_integer,
@@ -94,9 +94,9 @@ defmodule Noslib.SlotStream.Chunk do
   end
 end
 
-defimpl Noslib.Encoder, for: Noslib.SlotStream.Chunk do
-  import Noslib.Helpers
-  alias Noslib.{Character, Equipment, Pet}
+defimpl NosLib.Encoder, for: NosLib.SlotStream.Chunk do
+  import NosLib.Helpers
+  alias NosLib.{Character, Equipment, Pet}
 
   def serialize(packet) do
     [

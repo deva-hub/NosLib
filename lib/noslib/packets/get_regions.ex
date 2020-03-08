@@ -1,4 +1,4 @@
-defmodule Noslib.GetRegions do
+defmodule NosLib.GetRegions do
   @moduledoc """
   GetRegions is the response to a Ping session_id.
 
@@ -9,7 +9,7 @@ defmodule Noslib.GetRegions do
   ```
   """
 
-  alias Noslib.Server
+  alias NosLib.Server
 
   @type population :: non_neg_integer
   @type capacity :: non_neg_integer
@@ -29,9 +29,9 @@ defmodule Noslib.GetRegions do
   end
 end
 
-defimpl Noslib.Encoder, for: Noslib.GetRegions do
-  import Noslib.Helpers
-  alias Noslib.Server
+defimpl NosLib.Encoder, for: NosLib.GetRegions do
+  import NosLib.Helpers
+  alias NosLib.Server
 
   def serialize(packet) do
     [

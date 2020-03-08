@@ -1,4 +1,4 @@
-defmodule Noslib.ClientAuth do
+defmodule NosLib.ClientAuth do
   @moduledoc """
   A wrapper for Nostale's `ClientAuth` message.
   """

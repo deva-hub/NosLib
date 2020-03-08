@@ -1,4 +1,4 @@
-defmodule Noslib.Crypto.Login do
+defmodule NosLib.Crypto.Login do
   @moduledoc """
   This module provides a set of functions used for decoding and encoding Gateway
   packets.

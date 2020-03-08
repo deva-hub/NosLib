@@ -1,4 +1,4 @@
-defmodule Noslib.Ip do
+defmodule NosLib.Ip do
   @type t :: :inet.ip4_address()
 
   @empty ["-1"]

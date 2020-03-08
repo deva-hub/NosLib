@@ -1,4 +1,4 @@
-defmodule Noslib.Helpers do
+defmodule NosLib.Helpers do
   @boolean BiMap.new([
              {true, "1"},
              {false, "0"}

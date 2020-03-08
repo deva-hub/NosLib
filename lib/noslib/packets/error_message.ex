@@ -1,4 +1,4 @@
-defmodule Noslib.ErrorMessage do
+defmodule NosLib.ErrorMessage do
   @moduledoc """
   ErrorMessage is the response to a Ping reason.
 
@@ -29,7 +29,7 @@ defmodule Noslib.ErrorMessage do
   end
 end
 
-defimpl Noslib.Encoder, for: Noslib.ErrorMessage do
+defimpl NosLib.Encoder, for: NosLib.ErrorMessage do
   def serialize(packet) do
     ["failc", packet.reason |> encode_reason()]
   end

@@ -1,4 +1,4 @@
-defmodule Noslib.Character do
+defmodule NosLib.Character do
   @moduledoc false
 
   @gender BiMap.new([

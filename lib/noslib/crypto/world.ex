@@ -1,4 +1,4 @@
-defmodule Noslib.Crypto.World do
+defmodule NosLib.Crypto.World do
   @moduledoc """
   This module provides a set of functions used for decoding and encoding Gateway
   packets.

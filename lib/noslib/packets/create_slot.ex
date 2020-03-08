@@ -1,4 +1,4 @@
-defmodule Noslib.CreateSlot do
+defmodule NosLib.CreateSlot do
   @moduledoc """
   CreateSlot is the response to a Ping message.
 
@@ -9,7 +9,7 @@ defmodule Noslib.CreateSlot do
   ```
   """
 
-  alias Noslib.Character
+  alias NosLib.Character
 
   @type t :: %__MODULE__{
           index: non_neg_integer,

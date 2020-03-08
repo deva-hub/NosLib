@@ -1,4 +1,4 @@
-defmodule Noslib.InfoMessage do
+defmodule NosLib.InfoMessage do
   @moduledoc """
   InfoMessage is the response to a Ping message.
 
@@ -18,7 +18,7 @@ defmodule Noslib.InfoMessage do
   end
 end
 
-defimpl Noslib.Encoder, for: Noslib.InfoMessage do
+defimpl NosLib.Encoder, for: NosLib.InfoMessage do
   def serialize(packet) do
     ["info", packet.message]
   end

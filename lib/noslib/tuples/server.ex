@@ -1,4 +1,4 @@
-defmodule Noslib.Server do
+defmodule NosLib.Server do
   @moduledoc """
   Server is the response to a Ping session_id.
 
@@ -9,8 +9,8 @@ defmodule Noslib.Server do
   ```
   """
 
-  import Noslib.Helpers
-  alias Noslib.{Ip, World}
+  import NosLib.Helpers
+  alias NosLib.{Ip, World}
 
   @type population :: non_neg_integer
   @type capacity :: non_neg_integer

@@ -1,4 +1,4 @@
-defmodule Noslib.SelectSlot do
+defmodule NosLib.SelectSlot do
   @moduledoc """
   SelectSlot is the response to a Ping message.
 
@@ -20,7 +20,7 @@ defmodule Noslib.SelectSlot do
   end
 end
 
-defimpl Noslib.Encoder, for: Noslib.SelectSlot do
+defimpl NosLib.Encoder, for: NosLib.SelectSlot do
   def serialize(packet) do
     ["select", packet.index]
   end

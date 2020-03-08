@@ -1,4 +1,4 @@
-defmodule Noslib.SlotStream do
+defmodule NosLib.SlotStream do
   @moduledoc """
   SlotStream is the response to a Ping message.
 
@@ -20,7 +20,7 @@ defmodule Noslib.SlotStream do
   end
 end
 
-defimpl Noslib.Encoder, for: Noslib.SlotStream do
+defimpl NosLib.Encoder, for: NosLib.SlotStream do
   def serialize(packet) do
     ["clist_start", packet.length]
   end

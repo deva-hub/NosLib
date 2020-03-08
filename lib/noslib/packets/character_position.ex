@@ -1,4 +1,4 @@
-defmodule Noslib.CharacterPosition do
+defmodule NosLib.CharacterPosition do
   @moduledoc """
   CharacterPosition is the response to a Ping message.
 
@@ -40,7 +40,7 @@ defmodule Noslib.CharacterPosition do
   end
 end
 
-defimpl Noslib.Encoder, for: Noslib.CharacterPosition do
+defimpl NosLib.Encoder, for: NosLib.CharacterPosition do
   def serialize(packet) do
     [
       "at",

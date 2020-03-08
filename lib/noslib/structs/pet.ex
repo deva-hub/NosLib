@@ -1,4 +1,4 @@
-defmodule Noslib.Pet do
+defmodule NosLib.Pet do
   @type t :: %__MODULE__{
           id: non_neg_integer,
           skin: pos_integer

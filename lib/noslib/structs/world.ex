@@ -1,4 +1,4 @@
-defmodule Noslib.World do
+defmodule NosLib.World do
   @type t :: %__MODULE__{
           id: non_neg_integer,
           name: String.t(),

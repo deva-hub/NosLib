@@ -1,9 +1,9 @@
-defmodule Noslib.GetCharacter do
+defmodule NosLib.GetCharacter do
   @moduledoc """
   Responses from the world server to select a character.
   """
 
-  alias Noslib.Character
+  alias NosLib.Character
 
   @type t :: %{
           id: non_neg_integer,
@@ -90,9 +90,9 @@ defmodule Noslib.GetCharacter do
   end
 end
 
-defimpl Noslib.Encoder, for: Noslib.GetCharacter do
-  import Noslib.Helpers
-  alias Noslib.Character
+defimpl NosLib.Encoder, for: NosLib.GetCharacter do
+  import NosLib.Helpers
+  alias NosLib.Character
 
   def serialize(packet) do
     [

@@ -1,4 +1,4 @@
-defmodule Noslib.DeleteSlot do
+defmodule NosLib.DeleteSlot do
   @moduledoc """
   DeleteSlot is the response to a Ping index.
 
@@ -21,7 +21,7 @@ defmodule Noslib.DeleteSlot do
   end
 end
 
-defimpl Noslib.Encoder, for: Noslib.DeleteSlot do
+defimpl NosLib.Encoder, for: NosLib.DeleteSlot do
   def serialize(packet) do
     [
       "char_DEL",

@@ -1,17 +1,17 @@
-defmodule Noslib do
+defmodule NosLib do
   @moduledoc """
-  Noslib keeps the contexts that define your domain
+  NosLib keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
   """
-  import Noslib.Helpers
+  import NosLib.Helpers
 
   @spec serialize(struct) :: iodata
   def serialize(packet) when is_binary(packet) do
     packet
-    |> Noslib.Encoder.serialize()
+    |> NosLib.Encoder.serialize()
     |> encode_packet()
   end
 
@@ -19,6 +19,6 @@ defmodule Noslib do
   def deserialize(packet) when is_binary(packet) do
     packet
     |> decode_packet()
-    |> Noslib.Encoder.deserialize()
+    |> NosLib.Encoder.deserialize()
   end
 end
