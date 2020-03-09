@@ -17,7 +17,7 @@ defmodule NosLib.Crypto.World do
         decrypt_handshake(data)
 
       key_base ->
-        decrypt_payload(data, key)
+        decrypt_payload(data, key_base)
     end
   end
 

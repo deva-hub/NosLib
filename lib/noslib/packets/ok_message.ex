@@ -1,12 +1,6 @@
 defmodule NosLib.OkMessage do
   @moduledoc """
-  OkMessage is the response to a Ping message.
-
-  ```
-  **OkMessage** `0x03` []
-
-  Reply to peer's `Ping` packet.
-  ```
+  OkMessage is a simple ping response.
   """
 
   @type t :: %__MODULE__{}
@@ -19,7 +13,7 @@ defmodule NosLib.OkMessage do
 end
 
 defimpl NosLib.Encoder, for: NosLib.OkMessage do
-  def serialize(%__MODULE__{}) do
+  def serialize(_) do
     ["OK"]
   end
 end

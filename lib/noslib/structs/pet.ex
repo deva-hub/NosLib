@@ -1,26 +1,25 @@
 defmodule NosLib.Pet do
   @type t :: %__MODULE__{
           id: non_neg_integer,
-          skin: pos_integer
+          skin_id: non_neg_integer
         }
 
-  defstruct [:id, :skin]
+  defstruct id: 0,
+            skin_id: 0
 
   @empty ["-1"]
 
-  @spec decode(iodata) :: t
   def decode(@empty) do
     %__MODULE__{}
   end
 
-  def decode([id, skin]) do
+  def decode([id, skin_id]) do
     %__MODULE__{
       id: id |> String.to_integer(),
-      skin: skin |> String.to_integer()
+      skin_id: skin_id |> String.to_integer()
     }
   end
 
-  @spec encode(t) :: iodata
   def encode do
     @empty
   end

@@ -1,12 +1,6 @@
 defmodule NosLib.DeleteSlot do
   @moduledoc """
-  DeleteSlot is the response to a Ping index.
-
-  ```
-  **DeleteSlot** `0x03` []
-
-  Reply to peer's `Ping` packet.
-  ```
+  DeleteSlot is the packet sent to delete a slot.
   """
 
   @type t :: %__MODULE__{
@@ -14,7 +8,8 @@ defmodule NosLib.DeleteSlot do
           name: String.t()
         }
 
-  defstruct [:index, :name]
+  defstruct index: 0,
+            name: ""
 
   def deserialize([index, name]) do
     %__MODULE__{index: index |> String.to_integer(), name: name}

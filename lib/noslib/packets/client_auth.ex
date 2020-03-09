@@ -1,14 +1,7 @@
 defmodule NosLib.ClientAuth do
   @moduledoc """
-  A wrapper for Nostale's `ClientAuth` message.
+  ClientAuth is the first package sent to the login server.
   """
-
-  defstruct [
-    :username,
-    :password,
-    :client_vsn,
-    :client_hash
-  ]
 
   @type t :: %__MODULE__{
           username: String.t(),
@@ -17,7 +10,11 @@ defmodule NosLib.ClientAuth do
           client_hash: String.t()
         }
 
-  @spec new(String.t(), String.t(), String.t(), String.t()) :: t
+  defstruct username: "",
+            password: "",
+            client_vsn: "0.0.0",
+            client_hash: ""
+
   def deserialize([username, password, client_vsn, _, client_hash]) do
     %__MODULE__{
       username: username,

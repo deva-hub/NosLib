@@ -19,6 +19,6 @@ defmodule NosLib do
   def deserialize(packet) when is_binary(packet) do
     packet
     |> decode_packet()
-    |> NosLib.Encoder.deserialize()
+    |> NosLib.Decoder.deserialize()
   end
 end

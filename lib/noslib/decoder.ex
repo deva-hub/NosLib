@@ -1,5 +1,7 @@
-defmodule NosLib.Packet do
-  @spec deserialize(String.t(), binary) :: struct
+defmodule NosLib.Decoder do
+  @moduledoc false
+
+  @spec deserialize([binary]) :: struct
   def deserialize(["at" | packet]) do
     NosLib.CharacterPosition.deserialize(packet)
   end

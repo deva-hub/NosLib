@@ -4,8 +4,8 @@ defmodule NosLib.Helpers do
              {false, "0"}
            ])
 
-  def decode_boolean(value), do: BiMap.get_key(value)
-  def encode_boolean(value), do: BiMap.get(value)
+  def decode_boolean(value), do: BiMap.get_key(@boolean, value)
+  def encode_boolean(value), do: BiMap.get(@boolean, value)
 
   def decode_nilable("-1", _), do: nil
   def decode_nilable(value, fun), do: fun.(value)
@@ -21,7 +21,7 @@ defmodule NosLib.Helpers do
     end_delimiter = fun.()
 
     enumerable
-    |> Enum.reduce_while(fn
+    |> Enum.reduce_while([], fn
       ^end_delimiter, acc ->
         acc
 

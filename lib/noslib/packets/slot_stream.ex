@@ -1,19 +1,13 @@
 defmodule NosLib.SlotStream do
   @moduledoc """
-  SlotStream is the response to a Ping message.
-
-  ```
-  **SlotStream** `0x03` []
-
-  Reply to peer's `Ping` packet.
-  ```
+  SlotStream is used to stream the character list.
   """
 
   @type t :: %__MODULE__{
-          length: length
+          length: non_neg_integer
         }
 
-  defstruct []
+  defstruct length: 0
 
   def deserialize([length]) do
     %__MODULE__{length: length}

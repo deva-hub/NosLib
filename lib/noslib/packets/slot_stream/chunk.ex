@@ -1,11 +1,14 @@
 defmodule NosLib.SlotStream.Chunk do
+  @moduledoc """
+  Chunk is the a character information.
+  """
   import NosLib.Helpers
   alias NosLib.{Character, Equipment, Pet}
 
   @type t :: %{
-          index: pos_integer,
+          index: non_neg_integer,
           name: String.t(),
-          gender: Character.gender(),
+          sex: Character.sex(),
           hair_color: Character.hair_color(),
           hair_style: Character.hair_style(),
           class: Character.class(),
@@ -16,80 +19,47 @@ defmodule NosLib.SlotStream.Chunk do
           pets: [Pet.t()]
         }
 
-  defstruct [
-    :index,
-    :name,
-    :gender,
-    :hair_color,
-    :hair_style,
-    :class,
-    :level,
-    :hero_level,
-    :job_level,
-    :equipment,
-    :pets
-  ]
+  defstruct index: 0,
+            name: "",
+            sex: "female",
+            hair_style: "mauve_taupe",
+            hair_color: "a",
+            class: "adventurer",
+            level: 0,
+            hero_level: 0,
+            job_level: 0,
+            equipment: %Equipment{},
+            pets: []
 
-  def deserialize(packet) do
-    character(%__MODULE__{}, packet)
-  end
-
-  def character(packet, [index, _, name, gender | rest]) do
-    hair(
-      %{
-        packet
-        | index: index,
-          name: name,
-          gender: gender |> Character.decode_gender()
-      },
-      rest
-    )
-  end
-
-  def hair(packet, [hair_style, hair_color, _ | rest]) do
-    character_2(
-      %{
-        packet
-        | hair_style: hair_style |> Character.decode_hair_style(),
-          hair_color: hair_color |> Character.decode_hair_color()
-      },
-      rest
-    )
-  end
-
-  def character_2(packet, [class | rest]) do
-    level(%{packet | class: class |> Character.decode_class()}, rest)
-  end
-
-  def level(packet, [level, hero_level | rest]) do
-    equipment(
-      %{
-        packet
-        | level: level |> String.to_integer(),
-          hero_level: hero_level |> String.to_integer()
-      },
-      rest
-    )
-  end
-
-  def equipment(packet, [equipment | rest]) do
-    level_2(
-      %{
-        packet
-        | equipment: equipment |> decode_struct() |> Equipment.decode()
-      },
-      rest
-    )
-  end
-
-  def level_2(packet, [job_level | rest]) do
-    pets(%{packet | job_level: job_level |> String.to_integer()}, rest)
-  end
-
-  def pets(packet, [pets, _, _]) do
-    %{
-      packet
-      | pets: pets |> decode_enum(&(&1 |> decode_struct() |> Pet.decode()))
+  def deserialize([
+        index,
+        _,
+        name,
+        sex,
+        hair_style,
+        hair_color,
+        _,
+        class,
+        level,
+        hero_level,
+        equipment,
+        job_level,
+        pets,
+        _,
+        _
+      ]) do
+    %__MODULE__{
+      index: index,
+      name: name,
+      sex: sex |> Character.decode_sex(),
+      hair_style: hair_style |> Character.decode_hair_style(),
+      hair_color: hair_color |> Character.decode_hair_color(),
+      class: class |> Character.decode_class(),
+      level: level |> String.to_integer(),
+      hero_level: hero_level |> String.to_integer(),
+      equipment: equipment |> decode_struct() |> Equipment.decode(),
+      job_level: job_level |> String.to_integer(),
+      pets: pets |> decode_enum(&(&1 |> decode_struct() |> Pet.decode()))
     }
   end
 end
@@ -104,7 +74,7 @@ defimpl NosLib.Encoder, for: NosLib.SlotStream.Chunk do
       packet.index |> to_string(),
       packet.name,
       "0",
-      packet.character.gender |> Character.encode_gender(),
+      packet.character.sex |> Character.encode_sex(),
       packet.character.hair_style |> Character.encode_hair_style(),
       packet.character.hair_color |> Character.encode_hair_color(),
       "0",

@@ -1,12 +1,6 @@
 defmodule NosLib.ErrorMessage do
   @moduledoc """
-  ErrorMessage is the response to a Ping reason.
-
-  ```
-  **ErrorMessage** `0x03` []
-
-  Reply to peer's `Ping` packet.
-  ```
+  ErrorMessage is the response to a error reason.
   """
 
   @type reason ::
@@ -22,7 +16,7 @@ defmodule NosLib.ErrorMessage do
 
   @type t :: %__MODULE__{reason: reason}
 
-  defstruct [:reason]
+  defstruct reason: :unexpected_error
 
   def deserialize([reason]) do
     %__MODULE__{reason: reason}

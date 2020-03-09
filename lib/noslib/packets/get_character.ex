@@ -1,8 +1,8 @@
 defmodule NosLib.GetCharacter do
   @moduledoc """
-  Responses from the world server to select a character.
+  GetCharacter is used to load a given character to the world.
   """
-
+  import NosLib.Helpers
   alias NosLib.Character
 
   @type t :: %{
@@ -11,9 +11,9 @@ defmodule NosLib.GetCharacter do
           group_id: non_neg_integer,
           familly_id: non_neg_integer,
           familly_name: String.t(),
-          familly_level: non_neg_integer,
+          familly_level: pos_integer,
           authority: non_neg_integer,
-          gender: Character.gender(),
+          sex: Character.sex(),
           hair_color: Character.hair_color(),
           hair_style: Character.hair_style(),
           class: Character.class(),
@@ -25,68 +25,62 @@ defmodule NosLib.GetCharacter do
           arena_winner?: boolean
         }
 
-  defstruct [
-    :id,
-    :name,
-    :group_id,
-    :familly_id,
-    :familly_name,
-    :familly_level,
-    :authority,
-    :gender,
-    :hair_style,
-    :hair_color,
-    :class,
-    :dignity,
-    :compliment,
-    :morph,
-    :invisible?,
-    :sp_upgrade?,
-    :arena_winner?
-  ]
+  defstruct id: 0,
+            name: "",
+            group_id: 0,
+            familly_id: 0,
+            familly_name: "",
+            familly_level: 1,
+            authority: 0,
+            sex: "female",
+            hair_color: "a",
+            hair_style: "mauve_taupe",
+            class: "adventurer",
+            dignity: 0,
+            compliment: 0,
+            morph: 0,
+            invisible?: false,
+            sp_upgrade?: false,
+            arena_winner?: false
 
-  def deserialize(packet) do
-    user(%__MODULE__{}, packet)
-  end
-
-  defp user(packet, [id, name, group_id | rest]) do
-    familly_id(%{packet | id: id, name: name, group_id: group_id}, rest)
-  end
-
-  defp familly_id(packet, [familly_id, familly_name | rest]) do
-    authority(%{packet | familly_id: familly_id, familly_name: familly_name}, rest)
-  end
-
-  defp authority(packet, [authority | rest]) do
-    character(%{packet | authority: authority}, rest)
-  end
-
-  defp character(packet, [gender | rest]) do
-    hair(%{packet | gender: gender}, rest)
-  end
-
-  defp hair(packet, [color, style | rest]) do
-    character_2(%{packet | hair_color: hair_color, hair_style: hair_style}, rest)
-  end
-
-  defp character_2(packet, [class | rest]) do
-    mode(%{packet | class: class}, rest)
-  end
-
-  defp mode(packet, [dignity, compliment | rest]) do
-    apparence(%{packet | dignity: dignity, compliment: compliment}, rest)
-  end
-
-  defp apparence(packet, [morph, invisible | rest]) do
-    familly_2(%{packet | morph: morph, invisible: invisible}, rest)
-  end
-
-  defp familly_2(packet, [familly_level | rest]) do
-    aura(%{packet | familly_level: familly_level}, rest)
-  end
-
-  defp aura(packet, [sp_upgrade, arena_winner]) do
-    %{packet | sp_upgrade: sp_upgrade, arena_winner: arena_winner}
+  def deserialize([
+        id,
+        name,
+        group_id,
+        familly_id,
+        familly_name,
+        authority,
+        sex,
+        hair_color,
+        hair_style,
+        class,
+        dignity,
+        compliment,
+        morph,
+        invisible,
+        familly_level,
+        sp_upgrade,
+        arena_winner
+      ]) do
+    %__MODULE__{
+      id: id |> String.to_integer(),
+      name: name,
+      group_id: group_id |> String.to_integer(),
+      familly_id: familly_id |> String.to_integer(),
+      familly_name: familly_name,
+      authority: authority |> String.to_integer(),
+      sex: sex |> Character.decode_sex(),
+      hair_color: hair_color |> Character.decode_hair_color(),
+      hair_style: hair_style |> Character.decode_hair_style(),
+      class: class |> String.to_integer(),
+      dignity: dignity |> String.to_integer(),
+      compliment: compliment |> String.to_integer(),
+      morph: morph |> String.to_integer(),
+      invisible?: invisible |> decode_boolean(),
+      familly_level: familly_level |> String.to_integer(),
+      sp_upgrade?: sp_upgrade |> decode_boolean(),
+      arena_winner?: arena_winner |> decode_boolean()
+    }
   end
 end
 
@@ -104,7 +98,7 @@ defimpl NosLib.Encoder, for: NosLib.GetCharacter do
       packet.familly_name,
       packet.id |> to_string(),
       packet.authority |> to_string(),
-      packet.gender |> Character.encode_gender(),
+      packet.sex |> Character.encode_sex(),
       packet.hair_style |> Character.encode_hair_style(),
       packet.hair_color |> Character.encode_hair_color(),
       packet.class |> Character.encode_class(),

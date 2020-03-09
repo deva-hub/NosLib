@@ -5,16 +5,17 @@ defmodule NosLib.World do
           group_id: non_neg_integer
         }
 
-  defstruct [:id, :name, :group_id]
+  defstruct id: 0,
+            name: "",
+            group_id: 0
 
   @empty ["10000.10000.1"]
 
-  @spec decode(iodata) :: t
   def decode(@empty) do
     %__MODULE__{}
   end
 
-  def decode(packet) do
+  def decode([id, name, group_id]) do
     %__MODULE__{
       id: id |> String.to_integer(),
       name: name,
@@ -22,7 +23,6 @@ defmodule NosLib.World do
     }
   end
 
-  @spec encode(t) :: iodata
   def encode do
     @empty
   end

@@ -1,14 +1,5 @@
 defmodule NosLib.Server do
-  @moduledoc """
-  Server is the response to a Ping session_id.
-
-  ```
-  **Server** `0x03` []
-
-  Reply to peer's `Ping` packet.
-  ```
-  """
-
+  @moduledoc false
   import NosLib.Helpers
   alias NosLib.{Ip, World}
 

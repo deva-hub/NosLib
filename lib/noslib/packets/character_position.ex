@@ -1,25 +1,23 @@
 defmodule NosLib.CharacterPosition do
   @moduledoc """
-  CharacterPosition is the response to a Ping message.
-
-  ```
-  **CharacterPosition** `0x03` []
-
-  Reply to peer's `Ping` packet.
-  ```
+  CharacterPosition is the event of character movement.
   """
 
   @type t :: %__MODULE__{
           id: non_neg_integer,
-          map_name: bitstring,
+          map_name: String.t(),
           music_id: non_neg_integer,
           x: integer,
           y: integer
         }
 
-  defstruct [:id, :map, :music, :x, :y]
+  defstruct id: 0,
+            map_name: "",
+            music_id: 0,
+            x: 0,
+            y: 0
 
-  def deserialize([id, map, x, y, _, _, music, _]) do
+  def deserialize(packet) do
     character(%__MODULE__{}, packet)
   end
 

@@ -1,12 +1,6 @@
 defmodule NosLib.SlotStream.End do
   @moduledoc """
-  SlotStream.End is the response to a Ping message.
-
-  ```
-  **SlotStream.End** `0x03` []
-
-  Reply to peer's `Ping` packet.
-  ```
+  End is the packet used to close the stream.
   """
 
   @type t :: %__MODULE__{}

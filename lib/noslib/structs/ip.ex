@@ -7,10 +7,13 @@ defmodule NosLib.Ip do
     {0, 0, 0, 0}
   end
 
-  def decode(ip) do
-    ip
-    |> Enum.map(&String.to_integer/1)
-    |> List.to_tuple()
+  def decode([d1, d2, d3, d4]) do
+    {
+      d1 |> String.to_integer(),
+      d2 |> String.to_integer(),
+      d3 |> String.to_integer(),
+      d4 |> String.to_integer()
+    }
   end
 
   @spec encode(t) :: iodata
@@ -18,9 +21,12 @@ defmodule NosLib.Ip do
     @empty
   end
 
-  def encode(ip) do
-    ip
-    |> Tuple.to_list()
-    |> Enum.map(&to_string/1)
+  def encode({d1, d2, d3, d4}) do
+    {
+      d1 |> to_string(),
+      d2 |> to_string(),
+      d3 |> to_string(),
+      d4 |> to_string()
+    }
   end
 end

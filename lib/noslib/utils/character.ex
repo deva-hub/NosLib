@@ -1,13 +1,13 @@
 defmodule NosLib.Character do
   @moduledoc false
 
-  @gender BiMap.new([
-            {"male", "0"},
-            {"female", "1"}
-          ])
+  @sex BiMap.new([
+         {"female", "0"},
+         {"male", "1"}
+       ])
 
-  def decode_gender(s), do: BiMap.get(@gender, s)
-  def encode_gender(s), do: BiMap.get_key(@gender, s)
+  def decode_sex(s), do: BiMap.get(@sex, s)
+  def encode_sex(s), do: BiMap.get_key(@sex, s)
 
   @hair_style BiMap.new([
                 {"a", "0"},
