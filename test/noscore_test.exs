@@ -9,24 +9,10 @@ defmodule NoscoreTest do
     password = Faker.format("????????????????")
     unknown_2 = Faker.format("????????????????")
     version = Faker.App.version()
-    unknown_3 = Faker.format("????????????????")
-    checksum = Faker.format("###############")
-
-    command =
-      Noscore.build("nos0575", [
-        unknown_1,
-        username,
-        password,
-        unknown_2,
-        version,
-        unknown_3,
-        checksum
-      ])
-
+    command = Noscore.build("nos0575", [unknown_1, username, password, unknown_2, version])
     message = {:tcp, conn.socket, command}
-
-    assert {:ok, _, [{:command, ["nos0575", ^username, ^password, ^version, ^checksum]}]} =
-             Noscore.Login.stream(conn, message)
+    assert {:ok, _, res} = Noscore.Login.stream(conn, message)
+    assert [{:command, ["nos0575", ^username, ^password, ^version]}] = res
   end
 
   test "stream unknown packet" do
