@@ -5,7 +5,7 @@ defmodule Noscore.Parser.Gateway do
 
   def command(combinator \\ empty()) do
     combinator
-    |> string("nos0575")
+    |> label(string("nos0575"), "header")
     |> ignore(space())
     |> nos0575()
     |> eos()
