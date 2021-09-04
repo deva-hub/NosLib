@@ -6,11 +6,20 @@ defmodule Noscore.Parser.Portal do
   import Noscore.Parser.Helpers
 
   def key(combinator \\ empty()) do
-    alphanum_string(combinator, min: 1)
+    combinator
+    |> alphanum_string(min: 1)
+    |> eos()
   end
 
   def auth(combinator \\ empty()) do
-    repeat(combinator, integer(min: 1) |> ignore(space()) |> alphanum_string(min: 1))
+    combinator
+    |> repeat(
+      integer(min: 1)
+      |> ignore(space())
+      |> alphanum_string(min: 1)
+      |> lookahead(choice([space(), eos()]))
+    )
+    |> eos()
   end
 
   def command(combinator \\ empty()) do
@@ -33,5 +42,6 @@ defmodule Noscore.Parser.Portal do
       string("f_stash_end") |> ignore(space()) |> f_stash_end(),
       string("lbs") |> ignore(space()) |> lbs()
     ])
+    |> eos()
   end
 end

@@ -12,17 +12,13 @@ defmodule Noscore.Gateway do
 
   def stream(conn, {:tcp, _, frame}) do
     crypto = get_crypto(conn)
-    parse_frame(conn, crypto.decrypt(frame), [])
+    parse_frame(conn, crypto.decrypt(frame))
   end
 
-  defp parse_frame(conn, "", acc) do
-    {:ok, conn, acc}
-  end
-
-  defp parse_frame(conn, frame, acc) do
+  defp parse_frame(conn, frame) do
     case Noscore.Parser.gateway_command(frame) do
-      {:ok, res, rest, _, _, _} ->
-        parse_frame(conn, rest, [{:command, res} | acc])
+      {:ok, res, _, _, _, _} ->
+        {:ok, conn, [{:command, res}]}
 
       {:error, _, _, _, _, _} ->
         :unknown

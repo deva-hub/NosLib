@@ -8,5 +8,6 @@ defmodule Noscore.Parser.Gateway do
     |> string("nos0575")
     |> ignore(space())
     |> nos0575()
+    |> eos()
   end
 end

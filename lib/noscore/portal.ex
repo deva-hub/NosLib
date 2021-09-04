@@ -11,7 +11,7 @@ defmodule Noscore.Portal do
   end
 
   def stream(conn, {:tcp, _, frame}) do
-    parse_frame(conn, decrypt_frame(conn, frame), [])
+    parse_frame(conn, decrypt_frame(conn, frame))
   end
 
   defp decrypt_frame(conn, frame) do
@@ -23,54 +23,43 @@ defmodule Noscore.Portal do
     end
   end
 
-  defp parse_frame(conn, "", acc) do
-    {:ok, conn, acc}
-  end
-
-  defp parse_frame(conn, frame, acc) do
+  defp parse_frame(conn, frame) do
     case conn.state do
       :init ->
-        parse_key_frame(conn, frame, acc)
+        parse_key_frame(conn, frame)
 
       :auth ->
-        parse_auth_frame(conn, frame, acc)
+        parse_auth_frame(conn, frame)
 
       :established ->
-        parse_command_frame(conn, frame, acc)
+        parse_command_frame(conn, frame)
     end
   end
 
-  defp parse_key_frame(conn, "", acc) do
-    {:ok, %{conn | state: :auth}, acc}
-  end
-
-  defp parse_key_frame(conn, frame, acc) do
+  defp parse_key_frame(conn, frame) do
     case Noscore.Parser.portal_key(frame) do
-      {:ok, res, rest, _, _, _} ->
-        parse_key_frame(conn, rest, [{:key, res} | acc])
+      {:ok, res, _, _, _, _} ->
+        {:ok, %{conn | state: :auth}, [{:key, res}]}
 
       {:error, _, _, _, _, _} ->
         :unknown
     end
   end
 
-  defp parse_auth_frame(conn, "", acc) do
-    {:ok, %{conn | state: :established}, acc}
+  defp parse_auth_frame(conn, frame) do
+    case Noscore.Parser.portal_auth(frame) do
+      {:ok, res, _, _, _, _} ->
+        {:ok, %{conn | state: :established}, [{:credential, res}]}
+
+      {:error, _, _, _, _, _} ->
+        :unknown
+    end
   end
 
-  defp parse_auth_frame(conn, frame, acc) do
-    {:ok, res, rest, _, _, _} = Noscore.Parser.portal_auth(frame)
-    parse_auth_frame(conn, rest, [{:credential, res} | acc])
-  end
-
-  defp parse_command_frame(conn, "", acc) do
-    {:ok, conn, acc}
-  end
-
-  defp parse_command_frame(conn, frame, acc) do
+  defp parse_command_frame(conn, frame) do
     case Noscore.Parser.portal_command(frame) do
-      {:ok, res, rest, _, _, _} ->
-        parse_command_frame(conn, rest, [{:command, res} | acc])
+      {:ok, res, _, _, _, _} ->
+        {:ok, conn, [{:command, res}]}
 
       {:error, _, _, _, _, _} ->
         :unknown
