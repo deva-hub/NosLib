@@ -1,4 +1,4 @@
-defmodule Noscore.BazarCommand do
+defmodule Noscore.Parser.Bazar do
   import NimbleParsec
 
   def c_blist(combinator \\ empty()) do

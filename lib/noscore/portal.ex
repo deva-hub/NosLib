@@ -1,4 +1,4 @@
-defmodule Noscore.Gateway do
+defmodule Noscore.Portal do
   defstruct last_packetid: 0, socket: nil, scheme: :nss
 
   def new(options) do
@@ -20,7 +20,7 @@ defmodule Noscore.Gateway do
   end
 
   defp parse_frame(conn, frame, acc) do
-    case Noscore.Parser.gateway(frame) do
+    case Noscore.Parser.portal(frame) do
       {:ok, res, rest, _, _, _} ->
         parse_frame(conn, rest, [{:command, res} | acc])
 
@@ -32,7 +32,7 @@ defmodule Noscore.Gateway do
   defp get_crypto(conn) do
     case conn.scheme do
       :ns -> Noscore.Crypto.Clear
-      :nss -> Noscore.Crypto.SimpleSubstitution
+      :nss -> Noscore.Crypto.MonoalphabeticSubstitution
     end
   end
 end

@@ -1,6 +1,6 @@
-defmodule Noscore.BattleCommand do
+defmodule Noscore.Parser.Battle do
   import NimbleParsec
-  import Noscore.ProtocolHelpers
+  import Noscore.Parser.Helpers
 
   def mtlist(combinator \\ empty()) do
     combinator

@@ -1,4 +1,4 @@
-defmodule Noscore.ClientCommand do
+defmodule Noscore.Parser.Client do
   import NimbleParsec
 
   def c_close(combinator \\ empty()) do

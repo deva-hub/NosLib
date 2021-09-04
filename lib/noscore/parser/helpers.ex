@@ -1,4 +1,4 @@
-defmodule Noscore.ProtocolHelpers do
+defmodule Noscore.Parser.Helpers do
   import NimbleParsec
 
   def alphanum_string(combinator \\ empty(), count_or_opts) do

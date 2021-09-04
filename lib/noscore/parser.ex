@@ -1,15 +1,15 @@
 defmodule Noscore.Parser do
   import NimbleParsec
-  import Noscore.BattleCommand
-  import Noscore.BazarCommand
-  import Noscore.ClientCommand
-  import Noscore.GatewayCommand
-  import Noscore.ProtocolHelpers
+  import Noscore.Parser.Battle
+  import Noscore.Parser.Bazar
+  import Noscore.Parser.Client
+  import Noscore.Parser.Gateway
+  import Noscore.Parser.Helpers
 
-  defparsec(:login, string("nos0575") |> ignore(space()) |> nos0575())
+  defparsec(:gateway, string("nos0575") |> ignore(space()) |> nos0575())
 
   defparsec(
-    :world,
+    :portal,
     choice([
       string("mtlist") |> ignore(space()) |> mtlist(),
       string("multi_target_list_sub_packet") |> ignore(space()) |> multi_target_list_sub_packet(),

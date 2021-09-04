@@ -1,6 +1,6 @@
-defmodule Noscore.GatewayCommand do
+defmodule Noscore.Parser.Gateway do
   import NimbleParsec
-  import Noscore.ProtocolHelpers
+  import Noscore.Parser.Helpers
 
   def nos0575(combinator \\ empty()) do
     combinator
