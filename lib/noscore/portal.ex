@@ -59,13 +59,8 @@ defmodule Noscore.Portal do
   end
 
   defp parse_auth_frame(conn, frame, acc) do
-    case Noscore.Parser.portal_auth(frame) do
-      {:ok, res, rest, _, _, _} ->
-        parse_auth_frame(conn, rest, [{:credential, res} | acc])
-
-      {:error, _, _, _, _, _} ->
-        :unknown
-    end
+    {:ok, res, rest, _, _, _} = Noscore.Parser.portal_auth(frame)
+    parse_auth_frame(conn, rest, [{:credential, res} | acc])
   end
 
   defp parse_command_frame(conn, "", acc) do
