@@ -20,7 +20,7 @@ defmodule Noscore.Gateway do
   end
 
   defp parse_frame(conn, frame, acc) do
-    case Noscore.Parser.gateway(frame) do
+    case Noscore.Parser.gateway_command(frame) do
       {:ok, res, rest, _, _, _} ->
         parse_frame(conn, rest, [{:command, res} | acc])
 
