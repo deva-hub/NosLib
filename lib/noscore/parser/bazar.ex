@@ -1,17 +1,27 @@
 defmodule Noscore.Parser.Bazar do
   import NimbleParsec
+  import Noscore.Parser.Helpers
 
   def c_blist(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "slot")
+    |> separator()
     |> label(filter_type(), "filter_type")
+    |> separator()
     |> label(integer(min: 1), "subfilter_type")
+    |> separator()
     |> label(integer(min: 1), "level_filter")
+    |> separator()
     |> label(integer(min: 1), "rare_filter")
+    |> separator()
     |> label(integer(min: 1), "upgrade_filter")
+    |> separator()
     |> label(integer(min: 1), "order_filter")
+    |> separator()
     |> ignore(integer(min: 1))
+    |> separator()
     |> label(integer(min: 1), "item_vnum_filter")
+    |> separator()
   end
 
   def filter_type(combinator \\ empty()) do
@@ -35,31 +45,49 @@ defmodule Noscore.Parser.Bazar do
   def c_buy(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "id")
+    |> separator()
     |> label(integer(min: 1), "vnum")
+    |> separator()
     |> label(integer(min: 1), "amount")
+    |> separator()
     |> label(integer(min: 1), "price")
+    |> separator()
   end
 
   def c_reg(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "type")
+    |> separator()
     |> label(integer(min: 1), "inventory")
+    |> separator()
     |> label(integer(min: 1), "slot")
+    |> separator()
     |> label(integer(min: 1), "durability")
+    |> separator()
     |> label(integer(min: 1), "package")
+    |> separator()
     |> label(integer(min: 1), "amount")
+    |> separator()
     |> label(integer(min: 1), "price")
+    |> separator()
     |> label(integer(min: 1), "taxe")
+    |> separator()
     |> label(integer(min: 1), "medal_used")
+    |> separator()
   end
 
   def c_scalc(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "id")
+    |> separator()
     |> label(integer(min: 1), "vnum")
+    |> separator()
     |> label(integer(min: 1), "amount")
+    |> separator()
     |> label(integer(min: 1), "max_amount")
+    |> separator()
     |> label(integer(min: 1), "price")
+    |> separator()
   end
 
   def c_skill(combinator \\ empty()) do
@@ -69,12 +97,16 @@ defmodule Noscore.Parser.Bazar do
   def c_slist(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "index")
+    |> separator()
     |> label(integer(min: 1), "filter")
+    |> separator()
   end
 
   def f_withdraw(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "slot")
+    |> separator()
     |> label(integer(min: 1), "amount")
+    |> separator()
   end
 end

@@ -28,4 +28,12 @@ defmodule Noscore.Parser.Helpers do
       {Enum, :join, []}
     )
   end
+
+  def header(combinator \\ empty(), header) do
+    label(combinator, string(header), "header")
+  end
+
+  def separator(combinator \\ empty()) do
+    ignore(combinator, space())
+  end
 end

@@ -5,7 +5,7 @@ defmodule Noscore.Parser.Battle do
   def mtlist(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "targets amount")
-    |> ignore(space())
+    |> separator()
     |> label(
       repeat(multi_target_list_sub_packet() |> lookahead(choice([space(), eos()]))),
       "targets"
@@ -15,14 +15,14 @@ defmodule Noscore.Parser.Battle do
   def multi_target_list_sub_packet(combinator \\ empty()) do
     combinator
     |> label(alphanum_string(min: 1), "skill id")
-    |> ignore(space())
+    |> separator()
     |> label(alphanum_string(min: 1), "target id")
   end
 
   def req_exc(combinator \\ empty()) do
     combinator
     |> label(alphanum_string(min: 1), "character id")
-    |> ignore(space())
+    |> separator()
     |> label(request_type(), "request type")
   end
 

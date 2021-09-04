@@ -5,13 +5,13 @@ defmodule Noscore.Parser.Client do
   def nos0575(combinator \\ empty()) do
     combinator
     |> ignore(alphanum_string(min: 1))
-    |> ignore(space())
+    |> separator()
     |> label(alphanum_string(min: 1), "username")
-    |> ignore(space())
+    |> separator()
     |> label(alphanum_string(min: 1) |> map({__MODULE__, :normalize_password, []}), "password")
-    |> ignore(space())
+    |> separator()
     |> ignore(alphanum_string(min: 1))
-    |> ignore(space())
+    |> separator()
     |> label(semver() |> map({__MODULE__, :normalize_version, []}), "version")
   end
 
