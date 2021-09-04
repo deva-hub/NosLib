@@ -28,7 +28,6 @@ defmodule Noscore.Parser.Portal do
     |> separator()
     |> choice([
       header("mtlist") |> separator() |> mtlist(),
-      header("multi_target_list_sub_packet") |> separator() |> multi_target_list_sub_packet(),
       header("req_exc") |> separator() |> req_exc(),
       header("c_buy") |> separator() |> c_buy(),
       header("c_reg") |> separator() |> c_reg(),

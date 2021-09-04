@@ -7,12 +7,12 @@ defmodule Noscore.Parser.Battle do
     |> label(integer(min: 1), "targets amount")
     |> separator()
     |> label(
-      repeat(multi_target_list_sub_packet() |> lookahead(choice([space(), eos()]))),
+      repeat(multi_target_element() |> lookahead(choice([space(), eos()]))),
       "targets"
     )
   end
 
-  def multi_target_list_sub_packet(combinator \\ empty()) do
+  defp multi_target_element(combinator \\ empty()) do
     combinator
     |> label(alphanum_string(min: 1), "skill id")
     |> separator()
