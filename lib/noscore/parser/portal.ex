@@ -37,7 +37,6 @@ defmodule Noscore.Parser.Portal do
       header("f_withdraw") |> separator() |> f_withdraw(),
       header("c_close") |> separator() |> c_close(),
       header("gop") |> separator() |> gop(),
-      header("character_option") |> separator() |> character_option(),
       header("f_stash_end") |> separator() |> f_stash_end(),
       header("lbs") |> separator() |> lbs()
     ])
