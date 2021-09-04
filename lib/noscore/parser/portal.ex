@@ -27,17 +27,17 @@ defmodule Noscore.Parser.Portal do
     |> integer(min: 1)
     |> separator()
     |> choice([
-      header("mtlist") |> separator() |> mtlist(),
-      header("req_exc") |> separator() |> req_exc(),
-      header("c_buy") |> separator() |> c_buy(),
-      header("c_reg") |> separator() |> c_reg(),
-      header("c_scalc") |> separator() |> c_scalc(),
-      header("c_skill") |> separator() |> c_skill(),
-      header("c_slist") |> separator() |> c_slist(),
-      header("f_withdraw") |> separator() |> f_withdraw(),
-      header("c_close") |> separator() |> c_close(),
-      header("gop") |> separator() |> gop(),
+      header("mtlist") |> separator() |> multi_target_list(),
+      header("req_exc") |> separator() |> request(),
+      header("c_buy") |> separator() |> character_buy(),
+      header("c_reg") |> separator() |> character_reg(),
+      header("c_scalc") |> separator() |> character_scale_currency(),
+      header("c_skill") |> separator() |> character_skill(),
+      header("c_slist") |> separator() |> characters_list(),
+      header("f_withdraw") |> separator() |> family_withdraw(),
+      header("gop") |> separator() |> global_options(),
       header("f_stash_end") |> separator() |> f_stash_end(),
+      header("c_close") |> separator() |> c_close(),
       header("lbs") |> separator() |> lbs()
     ])
     |> eos()

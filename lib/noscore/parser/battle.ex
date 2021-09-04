@@ -2,7 +2,7 @@ defmodule Noscore.Parser.Battle do
   import NimbleParsec
   import Noscore.Parser.Helpers
 
-  def mtlist(combinator \\ empty()) do
+  def multi_target_list(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "targets amount")
     |> separator()
@@ -19,7 +19,7 @@ defmodule Noscore.Parser.Battle do
     |> label(alphanum_string(min: 1), "target id")
   end
 
-  def req_exc(combinator \\ empty()) do
+  def request(combinator \\ empty()) do
     combinator
     |> label(alphanum_string(min: 1), "character id")
     |> separator()

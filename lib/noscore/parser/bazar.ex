@@ -2,7 +2,7 @@ defmodule Noscore.Parser.Bazar do
   import NimbleParsec
   import Noscore.Parser.Helpers
 
-  def c_blist(combinator \\ empty()) do
+  def character_blist(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "slot")
     |> separator()
@@ -42,7 +42,7 @@ defmodule Noscore.Parser.Bazar do
     ])
   end
 
-  def c_buy(combinator \\ empty()) do
+  def character_buy(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "id")
     |> separator()
@@ -54,7 +54,7 @@ defmodule Noscore.Parser.Bazar do
     |> separator()
   end
 
-  def c_reg(combinator \\ empty()) do
+  def character_reg(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "type")
     |> separator()
@@ -76,7 +76,7 @@ defmodule Noscore.Parser.Bazar do
     |> separator()
   end
 
-  def c_scalc(combinator \\ empty()) do
+  def character_scale_currency(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "id")
     |> separator()
@@ -90,11 +90,11 @@ defmodule Noscore.Parser.Bazar do
     |> separator()
   end
 
-  def c_skill(combinator \\ empty()) do
+  def character_skill(combinator \\ empty()) do
     combinator
   end
 
-  def c_slist(combinator \\ empty()) do
+  def characters_list(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "index")
     |> separator()
@@ -102,7 +102,7 @@ defmodule Noscore.Parser.Bazar do
     |> separator()
   end
 
-  def f_withdraw(combinator \\ empty()) do
+  def family_withdraw(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "slot")
     |> separator()

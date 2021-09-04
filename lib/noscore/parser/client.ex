@@ -46,7 +46,7 @@ defmodule Noscore.Parser.Client do
     combinator
   end
 
-  def gop(combinator \\ empty()) do
+  def global_options(combinator \\ empty()) do
     combinator
     |> label(character_option(), "option")
     |> label(integer(min: 1), "active")
