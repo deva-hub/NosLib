@@ -7,7 +7,7 @@ defmodule Noscore.Parser.Portal do
 
   def key(combinator \\ empty()) do
     combinator
-    |> alphanum_string(min: 1)
+    |> integer(min: 1)
     |> eos()
   end
 

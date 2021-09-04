@@ -1,5 +1,9 @@
 defmodule Noscore.Portal do
-  defstruct last_packetid: 0, key: nil, state: :init, socket: nil, scheme: :nss
+  defstruct last_packetid: 0,
+            key: nil,
+            state: :init,
+            socket: nil,
+            scheme: :nss
 
   def new(options) do
     struct(__MODULE__, options)
@@ -38,8 +42,8 @@ defmodule Noscore.Portal do
 
   defp parse_key_frame(conn, frame) do
     case Noscore.Parser.portal_key(frame) do
-      {:ok, res, _, _, _, _} ->
-        {:ok, %{conn | state: :auth}, [{:key, res}]}
+      {:ok, [key], _, _, _, _} ->
+        {:ok, %{conn | state: :auth, key: key}, [{:key, key}]}
 
       {:error, _, _, _, _, _} ->
         :unknown
