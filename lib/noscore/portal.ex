@@ -1,5 +1,5 @@
 defmodule Noscore.Portal do
-  defstruct last_packetid: 0, socket: nil, scheme: :nss
+  defstruct last_packetid: 0, key: nil, socket: nil, scheme: :nss
 
   def new(options) do
     struct(__MODULE__, options)
@@ -11,8 +11,16 @@ defmodule Noscore.Portal do
   end
 
   def stream(conn, {:tcp, _, frame}) do
+    parse_frame(conn, decrypt_frame(conn, frame), [])
+  end
+
+  defp decrypt_frame(conn, frame) do
     crypto = get_crypto(conn)
-    parse_frame(conn, crypto.decrypt(frame), [])
+
+    case conn.state do
+      :key -> crypto.decrypt(frame)
+      _ -> crypto.decrypt(frame, key: conn.key)
+    end
   end
 
   defp parse_frame(conn, "", acc) do
