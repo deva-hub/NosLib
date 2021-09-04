@@ -42,10 +42,6 @@ defmodule Noscore.Parser.Client do
     end
   end
 
-  def c_close(combinator \\ empty()) do
-    combinator
-  end
-
   def global_options(combinator \\ empty()) do
     combinator
     |> label(character_option(), "option")
@@ -68,6 +64,10 @@ defmodule Noscore.Parser.Client do
       string("14") |> replace(:buff_blocked),
       string("15") |> replace(:miniland_invite_blocked)
     ])
+  end
+
+  def c_close(combinator \\ empty()) do
+    combinator
   end
 
   def f_stash_end(combinator \\ empty()) do

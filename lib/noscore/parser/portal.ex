@@ -36,10 +36,16 @@ defmodule Noscore.Parser.Portal do
       header("c_slist") |> separator() |> characters_list(),
       header("f_withdraw") |> separator() |> family_withdraw(),
       header("gop") |> separator() |> global_options(),
+      unidentified()
+    ])
+    |> eos()
+  end
+
+  defp unidentified(combinator \\ empty()) do
+    choice(combinator, [
       header("f_stash_end") |> separator() |> f_stash_end(),
       header("c_close") |> separator() |> c_close(),
       header("lbs") |> separator() |> lbs()
     ])
-    |> eos()
   end
 end
