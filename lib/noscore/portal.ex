@@ -1,6 +1,9 @@
 defmodule Noscore.Portal do
+  import Noscore.Utils
+
   defstruct last_packetid: 0,
             key: nil,
+            transport: nil,
             socket: nil,
             scheme: :nss
 
@@ -26,41 +29,32 @@ defmodule Noscore.Portal do
 
   def recv(conn) do
     with {:ok, frame} <- recv_frame(conn) do
-      wrap_parse_res(Noscore.Parser.portal_command(frame))
+      wrap_parse_err(Noscore.Parser.portal_command(frame))
     end
   end
 
-  defp recv_key(conn) do
-    with {:ok, frame} <- recv_frame(conn) do
-      case wrap_parse_res(Noscore.Parser.portal_key(frame)) do
+  defp recv_key(conn, timeout \\ 5000) do
+    with {:ok, frame} <- recv_frame(conn, timeout) do
+      case wrap_parse_err(Noscore.Parser.portal_key(frame)) do
         {:ok, key} -> {:ok, key}
         {:error, _} -> {:error, :bad_protocol}
       end
     end
   end
 
-  defp recv_auth(conn) do
-    with {:ok, frame} <- recv_frame(conn) do
-      case wrap_parse_res(Noscore.Parser.portal_auth(frame)) do
+  defp recv_auth(conn, timeout \\ 5000) do
+    with {:ok, frame} <- recv_frame(conn, timeout) do
+      case wrap_parse_err(Noscore.Parser.portal_auth(frame)) do
         {:ok, creds} -> {:ok, creds}
         {:error, _} -> {:error, :bad_protocol}
       end
     end
   end
 
-  defp recv_frame(conn) do
-    with {:ok, frame} <- :gen_tcp.recv(conn.socket, 0) do
-      {:ok, decrypt(conn, frame)}
-    end
-  end
-
-  defp wrap_parse_res(res) do
-    case res do
-      {:ok, res, _, _, _, _} ->
-        {:ok, res}
-
-      {:error, reason, _, _, _, _} ->
-        {:error, %Noscore.ParseError{reason: reason}}
+  defp recv_frame(conn, timeout \\ 5000) do
+    case conn.transport.recv(conn.socket, 0, timeout) do
+      {:ok, frame} -> {:ok, decrypt(conn, frame)}
+      {:error, _} = err -> err
     end
   end
 

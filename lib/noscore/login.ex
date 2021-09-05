@@ -1,5 +1,10 @@
 defmodule Noscore.Gateway do
-  defstruct last_packetid: 0, socket: nil, scheme: :nss
+  import Noscore.Utils
+
+  defstruct last_packetid: 0,
+            socket: nil,
+            transport: nil,
+            scheme: :nss
 
   def handshake(socket, options \\ []) do
     {:ok, struct(__MODULE__, Keyword.merge(options, socket: socket))}
@@ -10,27 +15,21 @@ defmodule Noscore.Gateway do
     conn.socket.send(crypto.encrypt(frame))
   end
 
-  def stream(conn, {:tcp, _, frame}) do
-    parse(conn, decrypt(conn, frame))
-  end
+  def recv(conn, timeout \\ 5000) do
+    case conn.transport.recv(conn.socket, 0, timeout) do
+      {:ok, frame} ->
+        decrypt(conn, frame)
+        |> Noscore.Parser.gateway_command()
+        |> wrap_parse_err()
 
-  def stream(_, _) do
-    :unknown
+      {:error, _} = err ->
+        err
+    end
   end
 
   defp decrypt(conn, frame) do
     crypto = scheme_to_crypto(conn.scheme)
     crypto.decrypt(frame)
-  end
-
-  defp parse(conn, frame) do
-    case Noscore.Parser.gateway_command(frame) do
-      {:ok, res, _, _, _, _} ->
-        {:ok, conn, [{:command, res}]}
-
-      {:error, _, rest, _, _, _} ->
-        {:data, rest}
-    end
   end
 
   defp scheme_to_crypto(:ns), do: Noscore.Crypto.Clear
