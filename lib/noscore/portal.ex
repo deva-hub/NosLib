@@ -1,79 +1,74 @@
 defmodule Noscore.Portal do
   defstruct last_packetid: 0,
             key: nil,
-            state: :init,
             socket: nil,
             scheme: :nss
 
-  def new(options) do
-    struct(__MODULE__, options)
+  def handshake(socket, options \\ []) do
+    conn = struct(__MODULE__, Keyword.merge(options, socket: socket))
+
+    with {:ok, conn} <- secure(conn),
+         {:ok, credentials} <- recv_auth(conn) do
+      {:ok, conn, %{credentials: credentials}}
+    end
+  end
+
+  defp secure(conn) do
+    with {:ok, key} <- recv_key(conn) do
+      {:ok, %{conn | key: key}}
+    end
   end
 
   def send(conn, frame) do
-    crypto = get_crypto(conn)
+    crypto = scheme_to_crypto(conn.scheme)
     conn.socket.send(crypto.encrypt(frame))
   end
 
-  def stream(conn, {:tcp, _, frame}) do
-    parse_frame(conn, decrypt_frame(conn, frame))
-  end
-
-  defp decrypt_frame(conn, frame) do
-    crypto = get_crypto(conn)
-
-    case conn.state do
-      :init -> crypto.decrypt(frame)
-      _ -> crypto.decrypt(frame, key: conn.key)
+  def recv(conn) do
+    with {:ok, frame} <- recv_frame(conn) do
+      wrap_parse_res(Noscore.Parser.portal_command(frame))
     end
   end
 
-  defp parse_frame(conn, frame) do
-    case conn.state do
-      :init ->
-        parse_key_frame(conn, frame)
-
-      :auth ->
-        parse_auth_frame(conn, frame)
-
-      :established ->
-        parse_command_frame(conn, frame)
+  defp recv_key(conn) do
+    with {:ok, frame} <- recv_frame(conn) do
+      case wrap_parse_res(Noscore.Parser.portal_key(frame)) do
+        {:ok, key} -> {:ok, key}
+        {:error, _} -> {:error, :bad_protocol}
+      end
     end
   end
 
-  defp parse_key_frame(conn, frame) do
-    case Noscore.Parser.portal_key(frame) do
-      {:ok, [key], _, _, _, _} ->
-        {:ok, %{conn | state: :auth, key: key}, [{:key, key}]}
-
-      {:error, _, _, _, _, _} ->
-        :unknown
+  defp recv_auth(conn) do
+    with {:ok, frame} <- recv_frame(conn) do
+      case wrap_parse_res(Noscore.Parser.portal_auth(frame)) do
+        {:ok, creds} -> {:ok, creds}
+        {:error, _} -> {:error, :bad_protocol}
+      end
     end
   end
 
-  defp parse_auth_frame(conn, frame) do
-    case Noscore.Parser.portal_auth(frame) do
+  defp recv_frame(conn) do
+    with {:ok, frame} <- :gen_tcp.recv(conn.socket, 0) do
+      {:ok, decrypt(conn, frame)}
+    end
+  end
+
+  defp wrap_parse_res(res) do
+    case res do
       {:ok, res, _, _, _, _} ->
-        {:ok, %{conn | state: :established}, [{:credential, res}]}
+        {:ok, res}
 
-      {:error, _, _, _, _, _} ->
-        :unknown
+      {:error, reason, _, _, _, _} ->
+        {:error, %Noscore.ParseError{reason: reason}}
     end
   end
 
-  defp parse_command_frame(conn, frame) do
-    case Noscore.Parser.portal_command(frame) do
-      {:ok, res, _, _, _, _} ->
-        {:ok, conn, [{:command, res}]}
-
-      {:error, _, _, _, _, _} ->
-        :unknown
-    end
+  defp decrypt(conn, frame) do
+    crypto = scheme_to_crypto(conn.scheme)
+    crypto.decrypt(frame, key: conn.key)
   end
 
-  defp get_crypto(conn) do
-    case conn.scheme do
-      :ns -> Noscore.Crypto.Clear
-      :nss -> Noscore.Crypto.MonoalphabeticSubstitution
-    end
-  end
+  defp scheme_to_crypto(:ns), do: Noscore.Crypto.Clear
+  defp scheme_to_crypto(:nss), do: Noscore.Crypto.MonoalphabeticSubstitution
 end

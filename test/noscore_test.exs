@@ -3,7 +3,7 @@ defmodule NoscoreTest do
   doctest Noscore
 
   test "stream nos0575 packet" do
-    conn = Noscore.Gateway.new(scheme: :ns)
+    conn = %Noscore.Gateway{scheme: :ns}
     unknown_1 = Faker.format("????????????????")
     username = Faker.format("????????????????")
     password = "2EB6A196E4B60D96A9267E"
@@ -16,9 +16,9 @@ defmodule NoscoreTest do
   end
 
   test "stream unknown packet" do
-    conn = Noscore.Gateway.new(scheme: :ns)
+    conn = %Noscore.Gateway{scheme: :ns}
     garbage = Faker.format("###############")
     message = {:tcp, conn.socket, garbage}
-    assert :unknown = Noscore.Gateway.stream(conn, message)
+    assert {:data, ^garbage} = Noscore.Gateway.stream(conn, message)
   end
 end
