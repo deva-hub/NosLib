@@ -13,12 +13,18 @@ defmodule Noscore.Portal do
     with {:ok, conn} <- secure(conn),
          {:ok, credentials} <- recv_auth(conn) do
       {:ok, conn, %{credentials: credentials}}
+    else
+      {:error, _} -> {:error, :bad_protocol}
     end
   end
 
   defp secure(conn) do
-    with {:ok, key} <- recv_key(conn) do
-      {:ok, %{conn | key: key}}
+    case recv_key(conn) do
+      {:ok, key} ->
+        {:ok, %{conn | key: key}}
+
+      {:error, _} = err ->
+        err
     end
   end
 
@@ -28,26 +34,32 @@ defmodule Noscore.Portal do
   end
 
   def recv(conn) do
-    with {:ok, frame} <- recv_frame(conn) do
-      wrap_parse_err(Noscore.Parser.portal_command(frame))
+    case recv_frame(conn) do
+      {:ok, frame} ->
+        wrap_parse_err(Noscore.Parser.portal_command(frame))
+
+      {:error, _} = err ->
+        err
     end
   end
 
   defp recv_key(conn, timeout \\ 5000) do
-    with {:ok, frame} <- recv_frame(conn, timeout) do
-      case wrap_parse_err(Noscore.Parser.portal_key(frame)) do
-        {:ok, key} -> {:ok, key}
-        {:error, _} -> {:error, :bad_protocol}
-      end
+    case recv_frame(conn, timeout) do
+      {:ok, frame} ->
+        wrap_parse_err(Noscore.Parser.portal_key(frame))
+
+      {:error, _} = err ->
+        err
     end
   end
 
   defp recv_auth(conn, timeout \\ 5000) do
-    with {:ok, frame} <- recv_frame(conn, timeout) do
-      case wrap_parse_err(Noscore.Parser.portal_auth(frame)) do
-        {:ok, creds} -> {:ok, creds}
-        {:error, _} -> {:error, :bad_protocol}
-      end
+    case recv_frame(conn, timeout) do
+      {:ok, frame} ->
+        wrap_parse_err(Noscore.Parser.portal_auth(frame))
+
+      {:error, _} = err ->
+        err
     end
   end
 

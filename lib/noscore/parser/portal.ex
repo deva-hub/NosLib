@@ -13,12 +13,13 @@ defmodule Noscore.Parser.Portal do
 
   def auth(combinator \\ empty()) do
     combinator
-    |> repeat(
-      integer(min: 1)
-      |> separator()
-      |> alphanum_string(min: 1)
-      |> lookahead(choice([space(), eos()]))
-    )
+    |> integer(min: 1)
+    |> separator()
+    |> label(alphanum_string(min: 1), "identifier")
+    |> separator()
+    |> integer(min: 1)
+    |> separator()
+    |> label(alphanum_string(min: 1), "token")
     |> eos()
   end
 

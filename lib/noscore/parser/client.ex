@@ -8,17 +8,31 @@ defmodule Noscore.Parser.Client do
     |> separator()
     |> label(alphanum_string(min: 1), "username")
     |> separator()
-    |> label(alphanum_string(min: 1) |> map({__MODULE__, :normalize_password, []}), "password")
+    |> label(token(), "token")
     |> separator()
     |> ignore(alphanum_string(min: 1))
     |> separator()
-    |> label(semver() |> map({__MODULE__, :normalize_version, []}), "version")
+    |> label(version(), "version")
   end
 
-  @nostale_semver_regex ~r/(\d*)\.(\d*)\.(\d*)\.(\d*)/
+  def token(combinator \\ empty()) do
+    combinator
+    |> alphanum_string(min: 1)
+    |> map({__MODULE__, :normalize_password, []})
+  end
 
-  def normalize_version(version) do
-    Regex.replace(@nostale_semver_regex, version, "\\1.\\2.\\3+\\4")
+  def version(combinator \\ empty()) do
+    reduce(
+      combinator,
+      integer_string(min: 1)
+      |> string(".")
+      |> integer_string(min: 1)
+      |> string(".")
+      |> integer_string(min: 1)
+      |> replace(string("."), "+")
+      |> integer_string(min: 1),
+      {Enum, :join, []}
+    )
   end
 
   def normalize_password(cipher_password) do

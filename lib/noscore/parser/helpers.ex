@@ -13,22 +13,6 @@ defmodule Noscore.Parser.Helpers do
     string(combinator, " ")
   end
 
-  def semver(combinator \\ empty()) do
-    reduce(
-      combinator,
-      integer_string(min: 1)
-      |> optional(
-        string(".")
-        |> integer_string(min: 1)
-        |> optional(
-          string(".")
-          |> integer_string(min: 1)
-        )
-      ),
-      {Enum, :join, []}
-    )
-  end
-
   def header(combinator \\ empty(), header) do
     label(combinator, string(header), "header")
   end

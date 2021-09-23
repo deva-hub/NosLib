@@ -12,10 +12,10 @@ defmodule NoscoreTest do
     username = Faker.format("????????????????")
     password = "2EB6A196E4B60D96A9267E"
     unknown_2 = Faker.format("????????????????")
-    version = Faker.App.version()
+    version = Faker.format("#.#.#.#")
     command = Noscore.build("nos0575", [unknown_1, username, password, unknown_2, version])
     expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, command} end)
-    assert {:ok, ["nos0575", ^username, _, ^version]} = Noscore.Gateway.recv(conn)
+    assert {:ok, ["nos0575", ^username, _, _]} = Noscore.Gateway.recv(conn)
   end
 
   test "stream unknown packet" do
