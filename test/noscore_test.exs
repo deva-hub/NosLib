@@ -1,6 +1,7 @@
 defmodule NoscoreTest do
   use ExUnit.Case, async: true
   import Mox
+  import Noscore.Event.Helpers
 
   defmock(Noscore.MockTransport, for: Noscore.Transport)
 
@@ -8,14 +9,22 @@ defmodule NoscoreTest do
 
   test "stream nos0575 packet" do
     conn = %Noscore.Gateway{scheme: :ns, transport: Noscore.MockTransport}
-    unknown_1 = Faker.format("????????????????")
-    username = Faker.format("????????????????")
-    password = "2EB6A196E4B60D96A9267E"
-    unknown_2 = Faker.format("????????????????")
-    version = Faker.format("#.#.#.#")
-    command = Noscore.build("nos0575", [unknown_1, username, password, unknown_2, version])
+
+    data = %{
+      username: Faker.format("????????????????"),
+      password: "2EB6A196E4B60D96A9267E",
+      version: "1.2.3.4"
+    }
+
+    command =
+      data
+      |> nos0575_packet()
+      |> Noscore.Event.to_string()
+
     expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, command} end)
-    assert {:ok, ["nos0575", ^username, _, _]} = Noscore.Gateway.recv(conn)
+
+    assert {:ok, ["nos0575", username, _, "1.2.3+4"]} = Noscore.Gateway.recv(conn)
+    assert username === data.username
   end
 
   test "stream unknown packet" do
@@ -23,5 +32,16 @@ defmodule NoscoreTest do
     garbage = Faker.format("###############")
     expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, garbage} end)
     assert {:error, %Noscore.ParseError{}} = Noscore.Gateway.recv(conn)
+  end
+
+  def nos0575_packet(packet) do
+    nslist([
+      "nos0575",
+      Faker.format("????????????????"),
+      packet.username,
+      packet.password,
+      Faker.format("????????????????"),
+      packet.version
+    ])
   end
 end

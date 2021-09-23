@@ -1,0 +1,61 @@
+defmodule Noscore.Event.Society do
+  import Noscore.Event.Helpers
+
+  def reputation(reputation) do
+    case reputation do
+      :stupid_minded -> nsint(-6)
+      :useless -> nsint(-5)
+      :not_qualified_for -> nsint(-4)
+      :bluffed_name_only -> nsint(-3)
+      :suspected -> nsint(-2)
+      :neutral -> nsint(-1)
+      :beginner -> nsint(1)
+      # :??? -> nsint(2)
+      # :??? -> nsint(3)
+      :trainee_g -> nsint(4)
+      :trainee_b -> nsint(5)
+      :trainee_r -> nsint(6)
+      :the_experienced_g -> nsint(7)
+      :the_experienced_b -> nsint(8)
+      :the_experienced_r -> nsint(9)
+      :battle_soldier_g -> nsint(10)
+      :battle_soldier_b -> nsint(11)
+      :battle_soldier_r -> nsint(12)
+      :expert_g -> nsint(13)
+      :expert_b -> nsint(14)
+      :expert_r -> nsint(15)
+      :leader_g -> nsint(16)
+      :leader_b -> nsint(17)
+      :leader_r -> nsint(18)
+      :master_g -> nsint(19)
+      :master_b -> nsint(20)
+      :master_r -> nsint(21)
+      :nos_g -> nsint(22)
+      :nos_b -> nsint(23)
+      :nos_r -> nsint(24)
+      :elite_g -> nsint(25)
+      :elite_b -> nsint(26)
+      :elite_r -> nsint(27)
+      :legend_g -> nsint(28)
+      :legend_b -> nsint(29)
+      :ancien_hero -> nsint(30)
+      :mysterious_hero -> nsint(31)
+      :legendary_hero -> nsint(32)
+    end
+  end
+
+  def dignity(:neutral), do: nsint(1)
+  def dignity(:suspected), do: nsint(2)
+  def dignity(:bluffed_name_only), do: nsint(3)
+  def dignity(:not_qualified_for), do: nsint(4)
+  def dignity(:useless), do: nsint(5)
+  def dignity(:stupid_minded), do: nsint(6)
+
+  def faction(:neutral), do: nsint(0)
+  def faction(:angel), do: nsint(1)
+  def faction(:demon), do: nsint(2)
+
+  def miniland(:open), do: nsint(0)
+  def miniland(:private), do: nsint(1)
+  def miniland(:lock), do: nsint(2)
+end
