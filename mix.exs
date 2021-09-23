@@ -6,6 +6,7 @@ defmodule Noscore.MixProject do
       app: :noscore,
       version: "0.1.0",
       elixir: "~> 1.12",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -17,6 +18,10 @@ defmodule Noscore.MixProject do
       extra_applications: [:logger, :crypto]
     ]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
