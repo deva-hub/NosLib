@@ -6,7 +6,7 @@ defmodule Noscore.Event.Gateway do
   def nstest_event(event) do
     nslist([
       nsstring("nstest"),
-      nsint(event.id),
+      nsint(event.key),
       event.portals
       |> Enum.map(&portal/1)
       |> Enum.concat([@portal_terminator])
@@ -20,9 +20,9 @@ defmodule Noscore.Event.Gateway do
       nsint(portal.port),
       nsint(portal_color(portal.population, portal.capacity)),
       nsstruct([
-        nsint(portal.id),
-        nsstring(portal.channel_id),
-        nsint(portal.world_name)
+        nsint(portal.world_id),
+        nsint(portal.channel_id),
+        nsstring(portal.world_name)
       ])
     ])
   end

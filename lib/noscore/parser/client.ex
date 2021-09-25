@@ -8,14 +8,14 @@ defmodule Noscore.Parser.Client do
     |> separator()
     |> label(alphanum_string(min: 1), "username")
     |> separator()
-    |> label(token(), "token")
+    |> label(password(), "password")
     |> separator()
     |> ignore(alphanum_string(min: 1))
     |> separator()
     |> label(version(), "version")
   end
 
-  def token(combinator \\ empty()) do
+  def password(combinator \\ empty()) do
     combinator
     |> alphanum_string(min: 1)
     |> map({__MODULE__, :normalize_password, []})
