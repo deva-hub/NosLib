@@ -3,7 +3,7 @@ defmodule Noscore.Parser.Gateway do
   import Noscore.Parser.Client
   import Noscore.Parser.Helpers
 
-  def command(combinator \\ empty()) do
+  def event(combinator \\ empty()) do
     combinator
     |> header("nos0575")
     |> separator()

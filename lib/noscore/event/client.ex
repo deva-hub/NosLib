@@ -1,12 +1,12 @@
 defmodule Noscore.Event.Client do
   import Noscore.Event.Helpers
 
-  def failc_packet(packet) do
-    nslist([nsstring("failc"), error(packet.error)])
+  def failc_event(event) do
+    nslist([nsstring("failc"), error(event.error)])
   end
 
-  def info_packet(packet) do
-    nslist([nsstring("info"), nsstring(packet.message)])
+  def info_event(event) do
+    nslist([nsstring("info"), nsstring(event.message)])
   end
 
   def error(:outdated_client), do: nsint(1)

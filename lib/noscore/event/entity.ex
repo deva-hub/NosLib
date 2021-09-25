@@ -2,49 +2,49 @@ defmodule Noscore.Event.Entity do
   import Noscore.Event.Helpers
   alias Noscore.Event.{Client, HUD, Society}
 
-  def c_info_packet(packet) do
+  def c_info_event(event) do
     nslist([
       nsstring("c_info"),
-      nsstring(packet.entity.name),
+      nsstring(event.entity.name),
       nsstring(""),
-      nsint(packet.group_id),
-      nsint(packet.family_id),
-      nsstring(packet.family_name),
-      nsint(packet.entity.id),
-      HUD.name_color(packet.name_color),
-      sex(packet.entity.sex),
-      hair_style(packet.entity.hair_style),
-      hair_color(packet.entity.hair_color),
-      class(packet.entity.class),
-      Society.reputation(packet.entity.reputation),
-      nsint(packet.entity.compliment),
-      nsint(packet.morph),
-      nsbool(packet.invisible?),
-      nsint(packet.family_level),
-      nsint(packet.morph_upgrade),
-      nsbool(packet.arena_winner?)
+      nsint(event.group_id),
+      nsint(event.family_id),
+      nsstring(event.family_name),
+      nsint(event.entity.id),
+      HUD.name_color(event.name_color),
+      sex(event.entity.sex),
+      hair_style(event.entity.hair_style),
+      hair_color(event.entity.hair_color),
+      class(event.entity.class),
+      Society.reputation(event.entity.reputation),
+      nsint(event.entity.compliment),
+      nsint(event.morph),
+      nsbool(event.invisible?),
+      nsint(event.family_level),
+      nsint(event.morph_upgrade),
+      nsbool(event.arena_winner?)
     ])
   end
 
-  def tit_packet(tit_packet) do
+  def tit_event(tit_event) do
     nslist([
       nsstring("tit"),
-      nsstring(tit_packet.title),
-      nsstring(tit_packet.name)
+      nsstring(tit_event.title),
+      nsstring(tit_event.name)
     ])
   end
 
-  def fd_packet(packet) do
+  def fd_event(event) do
     nslist([
       nsstring("fd"),
-      Society.reputation(packet.entity.reputation),
-      HUD.dignity_icon(packet.entity.reputation),
-      Society.dignity(packet.entity.dignity),
-      HUD.reputation_icon(packet.entity.dignity)
+      Society.reputation(event.entity.reputation),
+      HUD.dignity_icon(event.entity.reputation),
+      Society.dignity(event.entity.dignity),
+      HUD.reputation_icon(event.entity.dignity)
     ])
   end
 
-  def lev_packet(lev) do
+  def lev_event(lev) do
     nslist([
       nsstring("lev"),
       nsint(lev.entity.level),
@@ -60,16 +60,16 @@ defmodule Noscore.Event.Entity do
     ])
   end
 
-  def at_packet(packet) do
+  def at_event(event) do
     nslist([
       nsstring("at"),
-      nsint(packet.id),
-      nsint(packet.map.id),
-      nsint(packet.position.coordinate_x),
-      nsint(packet.position.coordinate_y),
+      nsint(event.id),
+      nsint(event.map.id),
+      nsint(event.position.coordinate_x),
+      nsint(event.position.coordinate_y),
       nsint(2),
       nsint(0),
-      nsint(packet.ambiance.id),
+      nsint(event.ambiance.id),
       nsint(-1)
     ])
   end
@@ -124,46 +124,46 @@ defmodule Noscore.Event.Entity do
   def class(:swordsman), do: nsint(3)
   def class(:martial_artist), do: nsint(4)
 
-  def in_packet(packet) do
+  def in_event(event) do
     nslist([
       nsstring("in"),
-      type(packet.type),
-      nsstring(packet.entity.name),
+      type(event.type),
+      nsstring(event.entity.name),
       nsstring(""),
-      nsint(packet.id),
-      nsint(packet.entity.position.coordinate_x),
-      nsint(packet.entity.position.coordinate_y),
-      direction(packet.entity.position.direction),
-      Client.name_color(packet.name_color),
-      sex(packet.entity.sex),
-      hair_style(packet.entity.hair_style),
-      hair_color(packet.entity.hair_color),
-      class(packet.entity.class),
-      equipments(packet.entity.equipment),
-      nsint(packet.hp_percent),
-      nsint(packet.mp_percent),
-      nsbool(packet.sitting?),
-      nsint(packet.group_id),
-      fairy_movement(packet.fairy_movement),
-      fairy_element(packet.fairy_element),
+      nsint(event.id),
+      nsint(event.entity.position.coordinate_x),
+      nsint(event.entity.position.coordinate_y),
+      direction(event.entity.position.direction),
+      Client.name_color(event.name_color),
+      sex(event.entity.sex),
+      hair_style(event.entity.hair_style),
+      hair_color(event.entity.hair_color),
+      class(event.entity.class),
+      equipments(event.entity.equipment),
+      nsint(event.hp_percent),
+      nsint(event.mp_percent),
+      nsbool(event.sitting?),
+      nsint(event.group_id),
+      fairy_movement(event.fairy_movement),
+      fairy_element(event.fairy_element),
       nsint(0),
-      nsint(packet.fairy_morph),
+      nsint(event.fairy_morph),
       nsint(0),
-      nsint(packet.morph),
-      nsint(packet.weapon_upgrade),
-      nsint(packet.armor_upgrade),
-      nsint(packet.family_id),
-      nsstring(packet.family_name),
-      Society.reputation(packet.entity.reputation),
-      nsbool(packet.invisible?),
-      nsint(packet.morph_upgrade),
-      Society.faction(packet.entity.faction),
-      nsint(packet.morph_bonus),
-      nsint(packet.entity.level),
-      nsint(packet.family_level),
-      nsstring(packet.family_icons),
-      nsint(packet.entity.compliment),
-      nsint(packet.size),
+      nsint(event.morph),
+      nsint(event.weapon_upgrade),
+      nsint(event.armor_upgrade),
+      nsint(event.family_id),
+      nsstring(event.family_name),
+      Society.reputation(event.entity.reputation),
+      nsbool(event.invisible?),
+      nsint(event.morph_upgrade),
+      Society.faction(event.entity.faction),
+      nsint(event.morph_bonus),
+      nsint(event.entity.level),
+      nsint(event.family_level),
+      nsstring(event.family_icons),
+      nsint(event.entity.compliment),
+      nsint(event.size),
       nsint(0),
       nsint(0),
       nsint(0)
@@ -184,14 +184,14 @@ defmodule Noscore.Event.Entity do
     ])
   end
 
-  def mv_packet(packet) do
+  def mv_event(event) do
     nslist([
       nsstring("mv"),
-      type(packet.entity_type),
-      nsint(packet.entity.id),
-      nsint(packet.position.coordinate_x),
-      nsint(packet.position.coordinate_y),
-      nsint(packet.speed)
+      type(event.entity_type),
+      nsint(event.entity.id),
+      nsint(event.position.coordinate_x),
+      nsint(event.position.coordinate_y),
+      nsint(event.speed)
     ])
   end
 end

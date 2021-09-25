@@ -3,11 +3,11 @@ defmodule Noscore.Event.Gateway do
 
   @portal_terminator "-1:-1:-1:10000.10000.1"
 
-  def nstest_packet(packet) do
+  def nstest_event(event) do
     nslist([
       nsstring("nstest"),
-      nsint(packet.id),
-      packet.portals
+      nsint(event.id),
+      event.portals
       |> Enum.map(&portal/1)
       |> Enum.concat([@portal_terminator])
       |> nslist()

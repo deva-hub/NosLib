@@ -17,34 +17,34 @@ defmodule NoscoreTest do
     {:ok, conn: conn}
   end
 
-  test "stream nos0575 packet", %{conn: conn} do
+  test "stream nos0575 event", %{conn: conn} do
     data = nos0575_fixture()
 
-    command =
+    event =
       data
-      |> nos0575_packet()
+      |> nos0575_event()
       |> Noscore.Event.to_string()
 
-    expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, command} end)
+    expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, event} end)
 
-    assert {:ok, _, [{:command, ["nos0575", username, _, _]}]} = Noscore.Gateway.recv(conn)
+    assert {:ok, _, [{:event, ["nos0575", username, _, _]}]} = Noscore.Gateway.recv(conn)
     assert username === data.username
   end
 
-  test "stream unknown packet", %{conn: conn} do
+  test "stream unknown event", %{conn: conn} do
     garbage = Faker.format("###############")
     expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, garbage} end)
     assert {:error, _, %Noscore.ParseError{}, []} = Noscore.Gateway.recv(conn)
   end
 
-  def nos0575_packet(packet) do
+  def nos0575_event(event) do
     nslist([
       "nos0575",
       Faker.format("????????????????"),
-      packet.username,
-      packet.password,
+      event.username,
+      event.password,
       Faker.format("????????????????"),
-      packet.version
+      event.version
     ])
   end
 end

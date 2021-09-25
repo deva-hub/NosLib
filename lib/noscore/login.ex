@@ -69,7 +69,7 @@ defmodule Noscore.Gateway do
   defp decode(conn, data) do
     case Noscore.Parser.gateway_command(data) do
       {:ok, response, _, _, _, _} ->
-        {:ok, conn, [{:command, response}]}
+        {:ok, conn, [{:event, response}]}
 
       {:error, reason, _, _, _, _} ->
         {:error, conn, %Noscore.ParseError{reason: reason}, []}

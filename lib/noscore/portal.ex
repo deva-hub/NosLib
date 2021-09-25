@@ -82,9 +82,10 @@ defmodule Noscore.Portal do
 
   defp decode(conn, data) when conn.state == :auth do
     case Noscore.Parser.portal_auth(data) do
-      {:ok, response, _, _, _, _} ->
+      {:ok, [_, identifier, command_id, password], _, _, _, _} ->
+        conn = put_in(conn.last_command_id, command_id)
         conn = put_in(conn.state, :open)
-        {:ok, conn, [{:credentials, response}]}
+        {:ok, conn, [{:credential, identifier}, {:credential, password}]}
 
       {:error, reason, _, _, _, _} ->
         {:error, conn, %Noscore.ParseError{reason: reason}, []}
@@ -93,8 +94,9 @@ defmodule Noscore.Portal do
 
   defp decode(conn, data) do
     case Noscore.Parser.portal_command(data) do
-      {:ok, response, _, _, _, _} ->
-        {:ok, conn, [{:command, response}]}
+      {:ok, [command_id | response], _, _, _, _} ->
+        conn = put_in(conn.last_command_id, command_id)
+        {:ok, conn, [{:event, response}]}
 
       {:error, reason, _, _, _, _} ->
         {:error, conn, %Noscore.ParseError{reason: reason}, []}

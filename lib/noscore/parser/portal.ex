@@ -5,7 +5,7 @@ defmodule Noscore.Parser.Portal do
   import Noscore.Parser.Client
   import Noscore.Parser.Helpers
 
-  def session(combinator \\ empty()) do
+  def key(combinator \\ empty()) do
     combinator
     |> integer(min: 1)
     |> eos()
@@ -23,7 +23,7 @@ defmodule Noscore.Parser.Portal do
     |> eos()
   end
 
-  def command(combinator \\ empty()) do
+  def event(combinator \\ empty()) do
     combinator
     |> integer(min: 1)
     |> separator()
