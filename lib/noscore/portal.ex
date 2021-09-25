@@ -18,7 +18,7 @@ defmodule Noscore.Portal do
       :ok ->
         {:ok, struct(__MODULE__, options)}
 
-      {:err, _} = err ->
+      {:error, _} = err ->
         err
     end
   end
