@@ -5,7 +5,7 @@ defmodule Noscore.Parser.Portal do
   import Noscore.Parser.Client
   import Noscore.Parser.Helpers
 
-  def key(combinator \\ empty()) do
+  def session(combinator \\ empty()) do
     combinator
     |> integer(min: 1)
     |> eos()
@@ -19,7 +19,7 @@ defmodule Noscore.Parser.Portal do
     |> separator()
     |> integer(min: 1)
     |> separator()
-    |> label(alphanum_string(min: 1), "token")
+    |> label(alphanum_string(min: 1), "password")
     |> eos()
   end
 

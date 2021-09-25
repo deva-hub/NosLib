@@ -3,7 +3,7 @@ defmodule Noscore.Parser do
   import NimbleParsec
 
   defparsec(:gateway_command, Gateway.command())
-  defparsec(:portal_key, Portal.key())
+  defparsec(:portal_session, Portal.key())
   defparsec(:portal_auth, Portal.auth())
   defparsec(:portal_command, Portal.command())
 end

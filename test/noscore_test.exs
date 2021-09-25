@@ -27,14 +27,14 @@ defmodule NoscoreTest do
 
     expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, command} end)
 
-    assert {:ok, ["nos0575", username, _, _]} = Noscore.Gateway.recv(conn)
+    assert {:ok, _, [{:command, ["nos0575", username, _, _]}]} = Noscore.Gateway.recv(conn)
     assert username === data.username
   end
 
   test "stream unknown packet", %{conn: conn} do
     garbage = Faker.format("###############")
     expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, garbage} end)
-    assert {:error, %Noscore.ParseError{}} = Noscore.Gateway.recv(conn)
+    assert {:error, _, %Noscore.ParseError{}, []} = Noscore.Gateway.recv(conn)
   end
 
   def nos0575_packet(packet) do

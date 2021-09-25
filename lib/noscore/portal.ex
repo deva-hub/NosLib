@@ -1,78 +1,104 @@
 defmodule Noscore.Portal do
-  import Noscore.Utils
-
-  defstruct last_packetid: 0,
+  defstruct last_event_id: 0,
             key: nil,
+            state: :closed,
             transport: nil,
             socket: nil,
             scheme: :nss
 
-  def handshake(socket, options \\ []) do
-    conn = struct(__MODULE__, Keyword.merge(options, socket: socket))
+  def initiate(transport, socket, options \\ []) do
+    options =
+      Keyword.merge(options,
+        socket: socket,
+        transport: transport,
+        state: :key
+      )
 
-    with {:ok, conn} <- secure(conn),
-         {:ok, credentials} <- recv_auth(conn) do
-      {:ok, conn, %{credentials: credentials}}
-    else
-      {:error, _} -> {:error, :bad_protocol}
-    end
+    {:ok, struct(__MODULE__, options)}
   end
 
-  defp secure(conn) do
-    case recv_key(conn) do
-      {:ok, key} ->
-        {:ok, %{conn | key: key}}
-
-      {:error, _} = err ->
-        err
-    end
-  end
-
-  def send(conn, frame) do
+  def send(conn, data) do
     crypto = scheme_to_crypto(conn.scheme)
-    conn.socket.send(crypto.encrypt(frame))
+    conn.socket.send(crypto.encrypt(data))
   end
 
-  def recv(conn) do
-    case recv_frame(conn) do
-      {:ok, frame} ->
-        wrap_parse_err(Noscore.Parser.portal_command(frame))
-
-      {:error, _} = err ->
-        err
-    end
-  end
-
-  defp recv_key(conn, timeout \\ 5000) do
-    case recv_frame(conn, timeout) do
-      {:ok, frame} ->
-        wrap_parse_err(Noscore.Parser.portal_key(frame))
-
-      {:error, _} = err ->
-        err
-    end
-  end
-
-  defp recv_auth(conn, timeout \\ 5000) do
-    case recv_frame(conn, timeout) do
-      {:ok, frame} ->
-        wrap_parse_err(Noscore.Parser.portal_auth(frame))
-
-      {:error, _} = err ->
-        err
-    end
-  end
-
-  defp recv_frame(conn, timeout \\ 5000) do
+  def recv(conn, timeout \\ 5000) do
     case conn.transport.recv(conn.socket, 0, timeout) do
-      {:ok, frame} -> {:ok, decrypt(conn, frame)}
-      {:error, _} = err -> err
+      {:ok, data} -> handle_data(conn, data)
+      {:error, error} -> handle_error(conn, error)
     end
   end
 
-  defp decrypt(conn, frame) do
+  def stream(%__MODULE__{transport: transport, socket: socket} = conn, {tag, socket, data})
+      when tag in [:tcp, :ssl] do
+    case handle_data(conn, data) do
+      {:ok, conn, responses} when conn.state != :closed ->
+        case transport.setopts(socket, active: :once) do
+          :ok ->
+            {:ok, conn, responses}
+
+          {:error, reason} ->
+            conn = put_in(conn.state, :closed)
+            {:error, conn, reason, responses}
+        end
+
+      other ->
+        other
+    end
+  end
+
+  defp handle_data(conn, data) do
+    case decode(conn, decrypt(conn, data)) do
+      {:ok, conn, responses} ->
+        {:ok, conn, Enum.reverse(responses)}
+
+      {:error, conn, reason, responses} ->
+        conn = put_in(conn.state, :closed)
+        {:error, conn, reason, responses}
+    end
+  end
+
+  defp handle_error(conn, error) do
+    conn = put_in(conn.state, :closed)
+    {:error, put_in(conn.state, :closed), error, []}
+  end
+
+  defp decrypt(conn, data) do
     crypto = scheme_to_crypto(conn.scheme)
-    crypto.decrypt(frame, key: conn.key)
+    crypto.decrypt(data, key: conn.key)
+  end
+
+  defp decode(conn, data) when conn.state == :key do
+    case Noscore.Parser.portal_session(data) do
+      {:ok, response, _, _, _, _} ->
+        conn = put_in(conn.key, response)
+        conn = put_in(conn.state, :credentials)
+        {:ok, conn, [{:key, response}]}
+
+      {:error, reason, _, _, _, _} ->
+        {:error, conn, %Noscore.ParseError{reason: reason}, []}
+    end
+  end
+
+  defp decode(conn, data) when conn.state == :auth do
+    case Noscore.Parser.portal_auth(data) do
+      {:ok, response, _, _, _, _} ->
+        conn = put_in(conn.state, :open)
+        {:ok, conn, [{:credentials, response}]}
+
+      {:error, reason, _, _, _, _} ->
+        {:error, conn, %Noscore.ParseError{reason: reason}, []}
+    end
+  end
+
+  defp decode(conn, data) do
+    case Noscore.Parser.portal_command(data) do
+      {:ok, response, _, _, _, _} ->
+        {:ok, conn, [{:command, response}]}
+
+      {:error, reason, _, _, _, _} ->
+        {:error, conn, %Noscore.ParseError{reason: reason}, []}
+    end
   end
 
   defp scheme_to_crypto(:ns), do: Noscore.Crypto.Clear

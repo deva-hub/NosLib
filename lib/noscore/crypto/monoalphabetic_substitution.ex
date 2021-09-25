@@ -1,6 +1,6 @@
 defmodule Noscore.Crypto.MonoalphabeticSubstitution do
   @moduledoc """
-  NosTale session base secure crypto
+  NosTale key base secure crypto
   """
   use Bitwise, only_operators: true
 
