@@ -12,7 +12,13 @@ defmodule Noscore.Gateway do
         state: :open
       )
 
-    {:ok, struct(__MODULE__, options)}
+    case transport.setopts(socket, active: :once) do
+      :ok ->
+        {:ok, struct(__MODULE__, options)}
+
+      {:err, _} = err ->
+        err
+    end
   end
 
   def send(conn, data) do
