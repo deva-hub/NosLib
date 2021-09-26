@@ -23,7 +23,8 @@ defmodule Noscore.Gateway do
 
   def send(conn, data) do
     crypto = scheme_to_crypto(conn.scheme)
-    conn.socket.send(crypto.encrypt(data))
+    data = data |> IO.iodata_to_binary() |> crypto.encrypt()
+    conn.transport.send(conn.socket, data)
   end
 
   def recv(conn, timeout \\ 5000) do
