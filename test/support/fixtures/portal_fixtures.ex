@@ -1,4 +1,4 @@
-defmodule Noscore.GatewayFixtures do
+defmodule Noscore.PortalFixtures do
   def nos0575_fixture do
     %{
       username: Faker.format("????????????????"),

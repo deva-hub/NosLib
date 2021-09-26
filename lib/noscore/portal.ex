@@ -1,9 +1,7 @@
 defmodule Noscore.Portal do
-  defstruct last_event_id: 0,
-            key: nil,
+  defstruct socket: nil,
             state: :closed,
             transport: nil,
-            socket: nil,
             scheme: :nss
 
   def initiate(transport, socket, options \\ []) do
@@ -11,7 +9,7 @@ defmodule Noscore.Portal do
       Keyword.merge(options,
         socket: socket,
         transport: transport,
-        state: :key
+        state: :open
       )
 
     case transport.setopts(socket, active: :once) do
@@ -72,37 +70,12 @@ defmodule Noscore.Portal do
 
   defp decrypt(conn, data) do
     crypto = scheme_to_crypto(conn.scheme)
-    crypto.decrypt(data, key: conn.key)
-  end
-
-  defp decode(conn, data) when conn.state == :key do
-    case Noscore.Parser.portal_session(data) do
-      {:ok, response, _, _, _, _} ->
-        conn = put_in(conn.key, response)
-        conn = put_in(conn.state, :credentials)
-        {:ok, conn, [{:key, response}]}
-
-      {:error, reason, _, _, _, _} ->
-        {:error, conn, %Noscore.ParseError{reason: reason}, []}
-    end
-  end
-
-  defp decode(conn, data) when conn.state == :auth do
-    case Noscore.Parser.portal_auth(data) do
-      {:ok, [_, identifier, command_id, password], _, _, _, _} ->
-        conn = put_in(conn.last_command_id, command_id)
-        conn = put_in(conn.state, :open)
-        {:ok, conn, [{:credential, identifier}, {:credential, password}]}
-
-      {:error, reason, _, _, _, _} ->
-        {:error, conn, %Noscore.ParseError{reason: reason}, []}
-    end
+    crypto.decrypt(data)
   end
 
   defp decode(conn, data) do
     case Noscore.Parser.portal_command(data) do
-      {:ok, [command_id | response], _, _, _, _} ->
-        conn = put_in(conn.last_command_id, command_id)
+      {:ok, response, _, _, _, _} ->
         {:ok, conn, [{:event, response}]}
 
       {:error, reason, rest, _, line, _} ->
@@ -111,5 +84,5 @@ defmodule Noscore.Portal do
   end
 
   defp scheme_to_crypto(:ns), do: Noscore.Crypto.Clear
-  defp scheme_to_crypto(:nss), do: Noscore.Crypto.MonoalphabeticSubstitution
+  defp scheme_to_crypto(:nss), do: Noscore.Crypto.SimpleSubstitution
 end

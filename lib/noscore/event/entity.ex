@@ -78,7 +78,7 @@ defmodule Noscore.Event.Entity do
   def type(:npc), do: nsint(2)
   def type(:monster), do: nsint(3)
   def type(:map_object), do: nsint(9)
-  def type(:portal), do: nsint(1000)
+  def type(:gateway), do: nsint(1000)
 
   def fairy_element(:neutral), do: nsint(1)
   def fairy_element(:fire), do: nsint(2)

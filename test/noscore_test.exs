@@ -2,14 +2,14 @@ defmodule NoscoreTest do
   use ExUnit.Case, async: true
   import Mox
   import Noscore.Event.Helpers
-  import Noscore.GatewayFixtures
+  import Noscore.PortalFixtures
 
   defmock(Noscore.MockTransport, for: Noscore.Transport)
 
   setup :verify_on_exit!
 
   setup do
-    conn = %Noscore.Gateway{
+    conn = %Noscore.Portal{
       scheme: :ns,
       transport: Noscore.MockTransport
     }
@@ -34,7 +34,7 @@ defmodule NoscoreTest do
   test "stream unknown event", %{conn: conn} do
     garbage = Faker.format("###############")
     expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, garbage} end)
-    assert {:error, _, %Noscore.ParseError{}, []} = Noscore.Gateway.recv(conn)
+    assert {:error, _, %Noscore.ParseError{}, []} = Noscore.Portal.recv(conn)
   end
 
   def nos0575_event(event) do

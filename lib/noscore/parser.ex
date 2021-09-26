@@ -1,9 +1,9 @@
 defmodule Noscore.Parser do
-  alias Noscore.Parser.{Gateway, Portal}
+  alias Noscore.Parser.{Portal, Gateway}
   import NimbleParsec
 
-  defparsec(:gateway_command, Gateway.event())
-  defparsec(:portal_session, Portal.key())
-  defparsec(:portal_auth, Portal.auth())
   defparsec(:portal_command, Portal.event())
+  defparsec(:gateway_session, Gateway.key())
+  defparsec(:gateway_auth, Gateway.auth())
+  defparsec(:gateway_command, Gateway.event())
 end

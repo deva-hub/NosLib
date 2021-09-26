@@ -1,4 +1,4 @@
-defmodule Noscore.Parser.Portal do
+defmodule Noscore.Parser.Gateway do
   import NimbleParsec
   import Noscore.Parser.Battle
   import Noscore.Parser.Bazar
