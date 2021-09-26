@@ -78,8 +78,8 @@ defmodule Noscore.Gateway do
       {:ok, response, _, _, _, _} ->
         {:ok, conn, [{:event, response}]}
 
-      {:error, reason, _, _, _, _} ->
-        {:error, conn, %Noscore.ParseError{reason: reason}, []}
+      {:error, reason, rest, _, line, _} ->
+        {:error, conn, %Noscore.ParseError{reason: reason, rest: rest, line: line}, []}
     end
   end
 

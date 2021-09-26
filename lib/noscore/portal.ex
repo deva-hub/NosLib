@@ -105,8 +105,8 @@ defmodule Noscore.Portal do
         conn = put_in(conn.last_command_id, command_id)
         {:ok, conn, [{:event, response}]}
 
-      {:error, reason, _, _, _, _} ->
-        {:error, conn, %Noscore.ParseError{reason: reason}, []}
+      {:error, reason, rest, _, line, _} ->
+        {:error, conn, %Noscore.ParseError{reason: reason, rest: rest, line: line}, []}
     end
   end
 

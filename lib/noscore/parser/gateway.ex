@@ -5,7 +5,7 @@ defmodule Noscore.Parser.Gateway do
 
   def event(combinator \\ empty()) do
     combinator
-    |> header("nos0575")
+    |> opcode("NoS0575", :nos0575)
     |> separator()
     |> nos0575()
     |> eos()

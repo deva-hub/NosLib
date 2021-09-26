@@ -27,7 +27,7 @@ defmodule NoscoreTest do
 
     expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, event} end)
 
-    assert {:ok, _, [{:event, ["nos0575", username, _, _]}]} = Noscore.Gateway.recv(conn)
+    assert {:ok, _, [{:event, [:nos0575, username, _, _, _]}]} = Noscore.Portal.recv(conn)
     assert username === data.username
   end
 
@@ -39,12 +39,14 @@ defmodule NoscoreTest do
 
   def nos0575_event(event) do
     nslist([
-      "nos0575",
+      "NoS0575",
       Faker.format("????????????????"),
       event.username,
       event.password,
       Faker.format("????????????????"),
-      event.version
+      "#{Faker.format("????")}\v#{event.version}",
+      Faker.format("????????????????"),
+      "#{Faker.format("????????????????")}\n"
     ])
   end
 end

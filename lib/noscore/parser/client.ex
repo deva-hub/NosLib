@@ -12,7 +12,14 @@ defmodule Noscore.Parser.Client do
     |> separator()
     |> ignore(alphanum_string(min: 1))
     |> separator()
+    |> ignore(alphanum_string(min: 1))
+    |> ignore(string("\v"))
     |> label(version(), "version")
+    |> separator()
+    |> ignore(alphanum_string(min: 1))
+    |> separator()
+    |> label(alphanum_string(min: 1), "checksum")
+    |> ignore(string("\n"))
   end
 
   def password(combinator \\ empty()) do
