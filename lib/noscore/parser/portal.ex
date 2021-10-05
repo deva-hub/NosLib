@@ -28,15 +28,15 @@ defmodule Noscore.Parser.Gateway do
     |> integer(min: 1)
     |> separator()
     |> choice([
-      header("mtlist") |> separator() |> multi_target_list(),
-      header("req_exc") |> separator() |> request(),
-      header("c_buy") |> separator() |> character_buy(),
-      header("c_reg") |> separator() |> character_reg(),
-      header("c_scalc") |> separator() |> character_scale_currency(),
-      header("c_skill") |> separator() |> character_skill(),
-      header("c_slist") |> separator() |> characters_list(),
-      header("f_withdraw") |> separator() |> family_withdraw(),
-      header("gop") |> separator() |> global_options(),
+      opcode("mtlist", :mtlist) |> separator() |> multi_target_list(),
+      opcode("req_exc", :req_exc) |> separator() |> request(),
+      opcode("c_buy", :c_buy) |> separator() |> character_buy(),
+      opcode("c_reg", :c_reg) |> separator() |> character_reg(),
+      opcode("c_scalc", :c_scalc) |> separator() |> character_scale_currency(),
+      opcode("c_skill", :c_skill) |> separator() |> character_skill(),
+      opcode("c_slist", :c_slist) |> separator() |> characters_list(),
+      opcode("f_withdraw", :f_withdraw) |> separator() |> family_withdraw(),
+      opcode("gop", :gop) |> separator() |> global_options(),
       unidentified()
     ])
     |> eos()
@@ -44,9 +44,9 @@ defmodule Noscore.Parser.Gateway do
 
   defp unidentified(combinator \\ empty()) do
     choice(combinator, [
-      header("f_stash_end") |> separator() |> f_stash_end(),
-      header("c_close") |> separator() |> c_close(),
-      header("lbs") |> separator() |> lbs()
+      opcode("f_stash_end", :f_stash_end) |> separator() |> f_stash_end(),
+      opcode("c_close", :c_close) |> separator() |> c_close(),
+      opcode("lbs", :lbs) |> separator() |> lbs()
     ])
   end
 end

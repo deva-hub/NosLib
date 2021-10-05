@@ -13,8 +13,8 @@ defmodule Noscore.Parser.Helpers do
     string(combinator, " ")
   end
 
-  def header(combinator \\ empty(), header) do
-    label(combinator, string(header), "header")
+  def opcode(combinator \\ empty(), opcode, to_atom) do
+    label(combinator, string(opcode) |> replace(to_atom), "opcode")
   end
 
   def separator(combinator \\ empty()) do
