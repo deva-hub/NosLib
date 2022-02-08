@@ -1,11 +1,11 @@
 defmodule Noscore.Utils do
-  def wrap_parse_err(res) do
-    case res do
-      {:ok, res, _, _, _, _} ->
-        {:ok, res}
+  def wrap_parse_err(conn, reason, rest, line) do
+    err = %Noscore.ParseError{
+      reason: reason,
+      rest: rest,
+      line: line
+    }
 
-      {:error, reason, _, _, _, _} ->
-        {:error, %Noscore.ParseError{reason: reason}}
-    end
+    {:error, conn, err, []}
   end
 end

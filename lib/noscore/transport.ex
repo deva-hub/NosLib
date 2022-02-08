@@ -1,4 +1,5 @@
 defmodule Noscore.Transport do
-  @callback send(term) :: {:ok, term} | {:error, term}
-  @callback recv(term, integer, integer) :: :ok
+  @callback send(term, term) :: :ok | {:error, term}
+  @callback recv(term, integer, integer) :: :ok | {:error, term}
+  @callback setopts(term, :inet.socket_options()) :: :ok | {:error, :inet.posix()}
 end

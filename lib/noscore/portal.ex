@@ -1,4 +1,6 @@
 defmodule Noscore.Portal do
+  alias Noscore.Portal.Crypto
+
   defstruct socket: nil,
             state: :closed,
             transport: nil,
@@ -22,9 +24,10 @@ defmodule Noscore.Portal do
   end
 
   def send(conn, data) do
-    crypto = scheme_to_crypto(conn.scheme)
-    data = data |> IO.iodata_to_binary() |> crypto.encrypt()
-    conn.transport.send(conn.socket, data)
+    conn.transport.send(
+      conn.socket,
+      Crypto.encrypt(conn, data)
+    )
   end
 
   def recv(conn, timeout \\ 5000) do
@@ -34,18 +37,11 @@ defmodule Noscore.Portal do
     end
   end
 
-  def stream(%__MODULE__{transport: transport, socket: socket} = conn, {tag, socket, data})
+  def stream(%__MODULE__{} = conn, {tag, _, data})
       when tag in [:tcp, :ssl] do
     case handle_data(conn, data) do
-      {:ok, conn, responses} when conn.state != :closed ->
-        case transport.setopts(socket, active: :once) do
-          :ok ->
-            {:ok, conn, responses}
-
-          {:error, reason} ->
-            conn = put_in(conn.state, :closed)
-            {:error, conn, reason, responses}
-        end
+      {:ok, %{state: :closed} = conn, responses} ->
+        handle_pull(conn, responses)
 
       other ->
         other
@@ -53,34 +49,53 @@ defmodule Noscore.Portal do
   end
 
   defp handle_data(conn, data) do
-    case decode(conn, decrypt(conn, data)) do
+    case handle_decode(conn, Crypto.decrypt(conn, data)) do
       {:ok, conn, responses} ->
         {:ok, conn, Enum.reverse(responses)}
 
       {:error, conn, reason, responses} ->
-        conn = put_in(conn.state, :closed)
-        {:error, conn, reason, responses}
+        {:error, put_in(conn.state, :closed), reason, responses}
+    end
+  end
+
+  defp handle_pull(conn, responses) do
+    case conn.transport.setopts(conn.socket, active: :once) do
+      :ok ->
+        {:ok, conn, responses}
+
+      {:error, reason} ->
+        {:error, put_in(conn.state, :closed), reason, responses}
     end
   end
 
   defp handle_error(conn, error) do
-    conn = put_in(conn.state, :closed)
     {:error, put_in(conn.state, :closed), error, []}
   end
 
-  defp decrypt(conn, data) do
-    crypto = scheme_to_crypto(conn.scheme)
-    crypto.decrypt(data)
-  end
-
-  defp decode(conn, data) do
+  defp handle_decode(conn, data) do
     case Noscore.Parser.portal_command(data) do
       {:ok, response, _, _, _, _} ->
-        {:ok, conn, [{:event, response}]}
+        handle_event(conn, response)
 
       {:error, reason, rest, _, line, _} ->
-        {:error, conn, %Noscore.ParseError{reason: reason, rest: rest, line: line}, []}
+        Noscore.Utils.wrap_parse_err(conn, reason, rest, line)
     end
+  end
+
+  defp handle_event(conn, response) do
+    {:ok, conn, [{:event, response}]}
+  end
+end
+
+defmodule Noscore.Portal.Crypto do
+  def encrypt(conn, data) do
+    crypto = scheme_to_crypto(conn.scheme)
+    data |> IO.iodata_to_binary() |> crypto.encrypt()
+  end
+
+  def decrypt(conn, data) do
+    crypto = scheme_to_crypto(conn.scheme)
+    crypto.decrypt(data)
   end
 
   defp scheme_to_crypto(:ns), do: Noscore.Crypto.Clear

@@ -12,15 +12,13 @@ defmodule Noscore.Parser.Gateway do
   end
 
   def auth(combinator \\ empty()) do
-    combinator
-    |> integer(min: 1)
-    |> separator()
-    |> label(alphanum_string(min: 1), "identifier")
-    |> separator()
-    |> integer(min: 1)
-    |> separator()
-    |> label(alphanum_string(min: 1), "password")
-    |> eos()
+    repeat(
+      combinator,
+      integer(min: 1)
+      |> separator()
+      |> alphanum_string(min: 1)
+      |> lookahead(choice([separator(), eos()]))
+    )
   end
 
   def event(combinator \\ empty()) do
