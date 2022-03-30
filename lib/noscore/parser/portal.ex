@@ -7,14 +7,14 @@ defmodule Noscore.Parser.Gateway do
 
   def key(combinator \\ empty()) do
     combinator
-    |> integer(min: 1)
+    |> label(integer(min: 1), "sequence number")
     |> eos()
   end
 
   def auth(combinator \\ empty()) do
     repeat(
       combinator,
-      integer(min: 1)
+      label(integer(min: 1), "sequence number")
       |> separator()
       |> alphanum_string(min: 1)
       |> lookahead(choice([separator(), eos()]))
@@ -23,7 +23,7 @@ defmodule Noscore.Parser.Gateway do
 
   def event(combinator \\ empty()) do
     combinator
-    |> integer(min: 1)
+    |> label(integer(min: 1), "sequence number")
     |> separator()
     |> choice([
       opcode("mtlist", :mtlist) |> separator() |> multi_target_list(),
