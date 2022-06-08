@@ -19,14 +19,14 @@ defmodule Noscore.Parser.Battle do
     |> label(alphanum_string(min: 1), "target id")
   end
 
-  def request(combinator \\ empty()) do
+  def exchange_request(combinator \\ empty()) do
     combinator
     |> label(alphanum_string(min: 1), "character id")
     |> separator()
-    |> label(request_type(), "request type")
+    |> label(exchange_request_type(), "request type")
   end
 
-  def request_type(combinator \\ empty()) do
+  def exchange_request_type(combinator \\ empty()) do
     choice(combinator, [
       string("1") |> replace(:requested),
       string("2") |> replace(:list),

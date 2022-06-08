@@ -73,17 +73,17 @@ defmodule Noscore.Portal do
   end
 
   defp handle_decode(conn, data) do
-    case Noscore.Parser.portal_command(data) do
+    case Noscore.Parser.portal_body(data) do
       {:ok, response, _, _, _, _} ->
-        handle_event(conn, response)
+        handle_frame(conn, response)
 
       {:error, reason, rest, _, line, _} ->
         Noscore.Utils.wrap_parse_err(conn, reason, rest, line)
     end
   end
 
-  defp handle_event(conn, response) do
-    {:ok, conn, [{:event, response}]}
+  defp handle_frame(conn, response) do
+    {:ok, conn, [{:frame, response}]}
   end
 end
 

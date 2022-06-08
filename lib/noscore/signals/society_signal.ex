@@ -1,8 +1,8 @@
-defmodule Noscore.Event.Society do
-  import Noscore.Event.Helpers
+defmodule Noscore.SocietySignal do
+  import Noscore.SignalHelpers
 
-  def reputation(reputation) do
-    case reputation do
+  def reputation(signal) do
+    case signal do
       :stupid_minded -> to_frame(-6)
       :useless -> to_frame(-5)
       :not_qualified_for -> to_frame(-4)

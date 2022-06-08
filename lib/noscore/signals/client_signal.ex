@@ -1,12 +1,12 @@
-defmodule Noscore.Event.Client do
-  import Noscore.Event.Helpers
+defmodule Noscore.ClientSignal do
+  import Noscore.SignalHelpers
 
-  def failc_event(event) do
-    to_frame([to_frame("failc"), error(event.error)])
+  def failc_frame(signal) do
+    to_frame([to_frame("failc"), error(signal.error)])
   end
 
-  def info_event(event) do
-    to_frame([to_frame("info"), to_frame(event.message)])
+  def info_frame(signal) do
+    to_frame([to_frame("info"), to_frame(signal.content)])
   end
 
   def error(:outdated_client), do: to_frame(1)

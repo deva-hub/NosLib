@@ -18,13 +18,13 @@ defmodule NoscoreTest do
     {:ok, conn: conn}
   end
 
-  test "stream nos0575 event", %{conn: conn} do
+  test "stream nos0575 message", %{conn: conn} do
     data = nos0575_fixture()
-    event = nos0575_event(data)
+    msg = nos0575_frame(data)
 
-    expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, IO.iodata_to_binary(event)} end)
+    expect(Noscore.MockTransport, :recv, fn _, _, _ -> {:ok, IO.iodata_to_binary(msg)} end)
 
-    assert {:ok, _, [{:event, [:nos0575, username, _, _, _]}]} = Noscore.Portal.recv(conn)
+    assert {:ok, _, [{:frame, [:nos0575, username, _, _, _]}]} = Noscore.Portal.recv(conn)
     assert username === data.username
   end
 

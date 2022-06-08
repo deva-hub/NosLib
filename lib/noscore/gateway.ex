@@ -1,7 +1,7 @@
 defmodule Noscore.Gateway do
   alias Noscore.Gateway.Crypto
 
-  defstruct last_event_id: 0,
+  defstruct sequence: 0,
             key: nil,
             state: :closed,
             transport: nil,
@@ -90,7 +90,7 @@ defmodule Noscore.Gateway do
   end
 
   defp handle_decode(conn, data) do
-    case Noscore.Parser.gateway_command(data) do
+    case Noscore.Parser.gateway_body(data) do
       {:ok, response, _, _, _, _} ->
         handle_command(conn, response)
 
@@ -115,11 +115,11 @@ defmodule Noscore.Gateway do
   end
 
   defp handle_command(conn, [command_id | response]) do
-    {:ok, %{conn | last_event_id: command_id}, [{:event, response}]}
+    {:ok, %{conn | sequence: command_id}, [{:frame, response}]}
   end
 
   defp pull_continue(conn, command_id) do
-    %{conn | last_event_id: command_id, state: :open}
+    %{conn | sequence: command_id, state: :open}
   end
 
   defp put_key(conn, key) do

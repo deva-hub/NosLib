@@ -3,7 +3,7 @@ defmodule Noscore.Parser.Portal do
   import Noscore.Parser.Client
   import Noscore.Parser.Helpers
 
-  def event(combinator \\ empty()) do
+  def request(combinator \\ empty()) do
     combinator
     |> opcode("NoS0575", :nos0575)
     |> separator()

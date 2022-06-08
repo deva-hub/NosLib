@@ -19,7 +19,7 @@ end
 
 defimpl Noscore.Frame, for: Atom do
   def to_frame(nil) do
-    raise ArgumentError, "cannot convert nil to event"
+    raise ArgumentError, "cannot convert nil to frame"
   end
 
   def to_frame(atom), do: Atom.to_string(atom)

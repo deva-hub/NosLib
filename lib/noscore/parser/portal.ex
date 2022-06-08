@@ -21,13 +21,13 @@ defmodule Noscore.Parser.Gateway do
     )
   end
 
-  def event(combinator \\ empty()) do
+  def request(combinator \\ empty()) do
     combinator
     |> label(integer(min: 1), "sequence number")
     |> separator()
     |> choice([
       opcode("mtlist", :mtlist) |> separator() |> multi_target_list(),
-      opcode("req_exc", :req_exc) |> separator() |> request(),
+      opcode("req_exc", :req_exc) |> separator() |> exchange_request(),
       opcode("c_buy", :c_buy) |> separator() |> character_buy(),
       opcode("c_reg", :c_reg) |> separator() |> character_reg(),
       opcode("c_scalc", :c_scalc) |> separator() |> character_scale_currency(),

@@ -1,5 +1,5 @@
-defmodule Noscore.Event.HUD do
-  import Noscore.Event.Helpers
+defmodule Noscore.HudSignal do
+  import Noscore.SignalHelpers
 
   def name_color(:white), do: to_frame(0)
   # def name_color(:???,) do: to_frame(1)
