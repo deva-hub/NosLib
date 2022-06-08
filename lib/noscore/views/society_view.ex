@@ -1,6 +1,8 @@
-defmodule Noscore.SocietySignal do
-  def reputation(signal) do
-    case signal do
+defmodule Noscore.SocietyView do
+  use Noscore.Signal
+
+  def render("reputation.nostale", %{reputation: reputation}) do
+    case reputation do
       :stupid_minded -> -6
       :useless -> -5
       :not_qualified_for -> -4
@@ -42,18 +44,30 @@ defmodule Noscore.SocietySignal do
     end
   end
 
-  def dignity(:neutral), do: 1
-  def dignity(:suspected), do: 2
-  def dignity(:bluffed_name_only), do: 3
-  def dignity(:not_qualified_for), do: 4
-  def dignity(:useless), do: 5
-  def dignity(:stupid_minded), do: 6
+  def render("dignity.nostale", %{dignity: dignity}) do
+    case dignity do
+      :neutral -> 1
+      :suspected -> 2
+      :bluffed_name_only -> 3
+      :not_qualified_for -> 4
+      :useless -> 5
+      :stupid_minded -> 6
+    end
+  end
 
-  def faction(:neutral), do: 0
-  def faction(:angel), do: 1
-  def faction(:demon), do: 2
+  def render("faction.nostale", %{faction: faction}) do
+    case faction do
+      :neutral -> 0
+      :angel -> 1
+      :demon -> 2
+    end
+  end
 
-  def miniland(:open), do: 0
-  def miniland(:private), do: 1
-  def miniland(:lock), do: 2
+  def render("miniland.nostale", %{miniland: miniland}) do
+    case miniland do
+      :open -> 0
+      :private -> 1
+      :lock -> 2
+    end
+  end
 end

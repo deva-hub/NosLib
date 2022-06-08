@@ -2,4 +2,5 @@
   "faker": {:hex, :faker, "0.17.0", "671019d0652f63aefd8723b72167ecdb284baf7d47ad3a82a15e9b8a6df5d1fa", [:mix], [], "hexpm", "a7d4ad84a93fd25c5f5303510753789fc2433ff241bf3b4144d3f6f291658a6a"},
   "mox": {:hex, :mox, "1.0.1", "b651bf0113265cda0ba3a827fcb691f848b683c373b77e7d7439910a8d754d6e", [:mix], [], "hexpm", "35bc0dea5499d18db4ef7fe4360067a59b06c74376eb6ab3bd67e6295b133469"},
   "nimble_parsec": {:hex, :nimble_parsec, "1.2.3", "244836e6e3f1200c7f30cb56733fd808744eca61fd182f731eac4af635cc6d0b", [:mix], [], "hexpm", "c8d789e39b9131acf7b99291e93dae60ab48ef14a7ee9d58c6964f59efb570b0"},
+  "phoenix_view": {:hex, :phoenix_view, "1.1.2", "1b82764a065fb41051637872c7bd07ed2fdb6f5c3bd89684d4dca6e10115c95a", [:mix], [{:phoenix_html, "~> 2.14.2 or ~> 3.0", [hex: :phoenix_html, repo: "hexpm", optional: true]}], "hexpm", "7ae90ad27b09091266f6adbb61e1d2516a7c3d7062c6789d46a7554ec40f3a56"},
 }

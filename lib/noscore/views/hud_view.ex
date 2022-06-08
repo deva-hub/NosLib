@@ -1,15 +1,25 @@
-defmodule Noscore.HudSignal do
-  def name_color(:white), do: 0
-  def name_color(:purple), do: 2
-  def name_color(:invisible), do: 6
+defmodule Noscore.HudView do
+  use Noscore.Signal
 
-  def dignity_icon(:neutral), do: -100
-  def dignity_icon(:suspected), do: -201
-  def dignity_icon(:bluffed_name_only), do: -401
-  def dignity_icon(:not_qualified_for), do: -601
-  def dignity_icon(:useless), do: -801
+  def render("name_color.nostale", %{name_color: name_color}) do
+    case name_color do
+      :white -> 0
+      :purple -> 2
+      :invisible -> 6
+    end
+  end
 
-  def reputation_icon(reputation) do
+  def render("dignity_icon.nostale", %{dignity_icon: dignity_icon}) do
+    case dignity_icon do
+      :neutral -> -100
+      :suspected -> -201
+      :bluffed_name_only -> -401
+      :not_qualified_for -> -601
+      :useless -> -801
+    end
+  end
+
+  def render("reputation_icon.nostale", reputation) do
     case reputation do
       :stupid_minded -> -800
       :useless -> -600

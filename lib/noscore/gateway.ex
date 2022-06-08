@@ -1,5 +1,4 @@
 defmodule Noscore.Gateway do
-  alias Noscore.Frame
   alias Noscore.Gateway.Crypto
 
   defstruct sequence: 0,
@@ -30,7 +29,7 @@ defmodule Noscore.Gateway do
   def send(conn, msg) do
     conn.transport.send(
       conn.socket,
-      Crypto.encrypt(conn, Frame.to_frame(msg))
+      Crypto.encrypt(conn, msg)
     )
   end
 
