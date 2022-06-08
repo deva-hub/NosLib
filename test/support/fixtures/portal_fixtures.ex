@@ -10,7 +10,7 @@ defmodule Noscore.PortalFixtures do
   end
 
   def nos0575_event(event) do
-    nslist([
+    to_frame([
       "NoS0575",
       Faker.format("????????????????"),
       event.username,
