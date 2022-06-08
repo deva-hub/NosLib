@@ -26,5 +26,9 @@ defimpl Noscore.Frame, for: Atom do
 end
 
 defimpl Noscore.Frame, for: List do
-  def to_frame(list), do: Enum.intersperse(list, " ")
+  def to_frame(list) do
+    list
+    |> Enum.intersperse(" ")
+    |> Enum.map(&Noscore.Frame.to_frame/1)
+  end
 end

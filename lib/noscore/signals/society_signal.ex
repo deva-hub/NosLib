@@ -1,61 +1,59 @@
 defmodule Noscore.SocietySignal do
-  import Noscore.SignalHelpers
-
   def reputation(signal) do
     case signal do
-      :stupid_minded -> to_frame(-6)
-      :useless -> to_frame(-5)
-      :not_qualified_for -> to_frame(-4)
-      :bluffed_name_only -> to_frame(-3)
-      :suspected -> to_frame(-2)
-      :neutral -> to_frame(-1)
-      :beginner -> to_frame(1)
-      # :??? -> to_frame(2)
-      # :??? -> to_frame(3)
-      :trainee_g -> to_frame(4)
-      :trainee_b -> to_frame(5)
-      :trainee_r -> to_frame(6)
-      :the_experienced_g -> to_frame(7)
-      :the_experienced_b -> to_frame(8)
-      :the_experienced_r -> to_frame(9)
-      :battle_soldier_g -> to_frame(10)
-      :battle_soldier_b -> to_frame(11)
-      :battle_soldier_r -> to_frame(12)
-      :expert_g -> to_frame(13)
-      :expert_b -> to_frame(14)
-      :expert_r -> to_frame(15)
-      :leader_g -> to_frame(16)
-      :leader_b -> to_frame(17)
-      :leader_r -> to_frame(18)
-      :master_g -> to_frame(19)
-      :master_b -> to_frame(20)
-      :master_r -> to_frame(21)
-      :nos_g -> to_frame(22)
-      :nos_b -> to_frame(23)
-      :nos_r -> to_frame(24)
-      :elite_g -> to_frame(25)
-      :elite_b -> to_frame(26)
-      :elite_r -> to_frame(27)
-      :legend_g -> to_frame(28)
-      :legend_b -> to_frame(29)
-      :ancien_hero -> to_frame(30)
-      :mysterious_hero -> to_frame(31)
-      :legendary_hero -> to_frame(32)
+      :stupid_minded -> -6
+      :useless -> -5
+      :not_qualified_for -> -4
+      :bluffed_name_only -> -3
+      :suspected -> -2
+      :neutral -> -1
+      :beginner -> 1
+      # :??? -> 2
+      # :??? -> 3
+      :trainee_g -> 4
+      :trainee_b -> 5
+      :trainee_r -> 6
+      :the_experienced_g -> 7
+      :the_experienced_b -> 8
+      :the_experienced_r -> 9
+      :battle_soldier_g -> 10
+      :battle_soldier_b -> 11
+      :battle_soldier_r -> 12
+      :expert_g -> 13
+      :expert_b -> 14
+      :expert_r -> 15
+      :leader_g -> 16
+      :leader_b -> 17
+      :leader_r -> 18
+      :master_g -> 19
+      :master_b -> 20
+      :master_r -> 21
+      :nos_g -> 22
+      :nos_b -> 23
+      :nos_r -> 24
+      :elite_g -> 25
+      :elite_b -> 26
+      :elite_r -> 27
+      :legend_g -> 28
+      :legend_b -> 29
+      :ancien_hero -> 30
+      :mysterious_hero -> 31
+      :legendary_hero -> 32
     end
   end
 
-  def dignity(:neutral), do: to_frame(1)
-  def dignity(:suspected), do: to_frame(2)
-  def dignity(:bluffed_name_only), do: to_frame(3)
-  def dignity(:not_qualified_for), do: to_frame(4)
-  def dignity(:useless), do: to_frame(5)
-  def dignity(:stupid_minded), do: to_frame(6)
+  def dignity(:neutral), do: 1
+  def dignity(:suspected), do: 2
+  def dignity(:bluffed_name_only), do: 3
+  def dignity(:not_qualified_for), do: 4
+  def dignity(:useless), do: 5
+  def dignity(:stupid_minded), do: 6
 
-  def faction(:neutral), do: to_frame(0)
-  def faction(:angel), do: to_frame(1)
-  def faction(:demon), do: to_frame(2)
+  def faction(:neutral), do: 0
+  def faction(:angel), do: 1
+  def faction(:demon), do: 2
 
-  def miniland(:open), do: to_frame(0)
-  def miniland(:private), do: to_frame(1)
-  def miniland(:lock), do: to_frame(2)
+  def miniland(:open), do: 0
+  def miniland(:private), do: 1
+  def miniland(:lock), do: 2
 end

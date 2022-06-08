@@ -1,28 +1,26 @@
 defmodule Noscore.ClientSignal do
-  import Noscore.SignalHelpers
-
   def failc_frame(signal) do
-    to_frame([to_frame("failc"), error(signal.error)])
+    ["failc", reason(signal.reason)]
   end
 
   def info_frame(signal) do
-    to_frame([to_frame("info"), to_frame(signal.content)])
+    ["info", signal.content]
   end
 
-  def error(:outdated_client), do: to_frame(1)
-  def error(:unexpected_error), do: to_frame(2)
-  def error(:maintenance), do: to_frame(3)
-  def error(:session_already_used), do: to_frame(4)
-  def error(:unvalid_credentials), do: to_frame(5)
-  def error(:cant_authenticate), do: to_frame(6)
-  def error(:citizen_blacklisted), do: to_frame(7)
-  def error(:country_blacklisted), do: to_frame(8)
-  def error(:bad_case), do: to_frame(9)
+  def reason(:outdated_client), do: 1
+  def reason(:unexpected_error), do: 2
+  def reason(:maintenance), do: 3
+  def reason(:session_already_used), do: 4
+  def reason(:unvalid_credentials), do: 5
+  def reason(:cant_authenticate), do: 6
+  def reason(:citizen_blacklisted), do: 7
+  def reason(:country_blacklisted), do: 8
+  def reason(:bad_case), do: 9
 
-  def lang(:kr), do: to_frame(0)
-  def lang(:en), do: to_frame(1)
+  def lang(:kr), do: 0
+  def lang(:en), do: 1
 
-  def name_color(:white), do: to_frame(0)
-  def name_color(:violet), do: to_frame(2)
-  def name_color(:invisible), do: to_frame(6)
+  def name_color(:white), do: 0
+  def name_color(:violet), do: 2
+  def name_color(:invisible), do: 6
 end

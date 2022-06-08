@@ -1,4 +1,5 @@
 defmodule Noscore.Portal do
+  alias Noscore.Frame
   alias Noscore.Portal.Crypto
 
   defstruct socket: nil,
@@ -23,10 +24,10 @@ defmodule Noscore.Portal do
     end
   end
 
-  def send(conn, data) do
+  def send(conn, msg) do
     conn.transport.send(
       conn.socket,
-      Crypto.encrypt(conn, data)
+      Crypto.encrypt(conn, Frame.to_frame(msg))
     )
   end
 

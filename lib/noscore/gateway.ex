@@ -1,10 +1,12 @@
 defmodule Noscore.Gateway do
+  alias Noscore.Frame
   alias Noscore.Gateway.Crypto
 
   defstruct sequence: 0,
             key: nil,
             state: :closed,
             transport: nil,
+            serializer: nil,
             socket: nil,
             scheme: :nss
 
@@ -25,10 +27,10 @@ defmodule Noscore.Gateway do
     end
   end
 
-  def send(conn, data) do
+  def send(conn, msg) do
     conn.transport.send(
       conn.socket,
-      Crypto.encrypt(conn, data)
+      Crypto.encrypt(conn, Frame.to_frame(msg))
     )
   end
 

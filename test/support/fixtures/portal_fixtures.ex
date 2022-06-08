@@ -1,6 +1,4 @@
 defmodule Noscore.PortalFixtures do
-  import Noscore.SignalHelpers
-
   def nos0575_fixture do
     %{
       username: Faker.format("????????????????"),
